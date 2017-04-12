@@ -1,7 +1,6 @@
 FROM ubuntu:16.04
 MAINTAINER Johannes Tegnér <johannes@jitesoft.com>
 
-# Install packages needed to build.
 ENV TESSDATA_PREFIX="/usr/local/share/" LEPTONICA_VERSION="1.74.1"
 
 RUN apt-get update && apt-get --assume-yes upgrade \
@@ -41,8 +40,7 @@ RUN apt-get update && apt-get --assume-yes upgrade \
     && LDFLAGS="-L/usr/local/lib" CFLAGS="-I/usr/local/include" make \
     && make install \
     && ldconfig \ 
-    && wget https://github.com/tesseract-ocr/tessdata/raw/4.00/eng.traineddata -O $TESSDATA_PREFIX/tessdata/eng.traineddata
-
-    RUN rm -rf /tesseract && rm -rf /leptonica-$LEPTONICA_VERSION
+    && wget https://github.com/tesseract-ocr/tessdata/raw/4.00/eng.traineddata -O $TESSDATA_PREFIX/tessdata/eng.traineddata \
+    && rm -rf /tesseract && rm -rf /leptonica-$LEPTONICA_VERSION
 
 ENTRYPOINT ["tesseract"]
