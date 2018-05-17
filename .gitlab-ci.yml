@@ -15,13 +15,13 @@ build:ubuntu1604:
   <<: *build
 
 # Should be fixed asap.
-.build:ubuntu1604:
+.build:ubuntu1710:
   variables:
     UBUNTU_VERSION: "17.10"
     EXTRA_TAGS: "artful"
   <<: *build
 
-build:ubuntu1604:
+build:ubuntu1804:
   variables:
     UBUNTU_VERSION: "18.04"
     EXTRA_TGS: "bionic latest"
