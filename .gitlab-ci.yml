@@ -1,0 +1,27 @@
+
+.build: &build
+  before_script:
+    - echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USER} --password-stdin
+  script:
+    - HASH=$(docker build --build-arg UBUNTU_VERSION=${UBUNTU_VERSION} -q .)
+    - TAGS="${UBUNTU_VERSION} ${EXTRA_TAGS}"
+    - for tag in $TAGS; do docker tag $BUILD jitesoft/tesseract-ocr:${tag}; docker push jitesoft/tesseract-ocr:${tag}; done
+
+build:ubuntu1604:
+  variables:
+    UBUNTU_VERSION: "16.04"
+    EXTRA_TAGS: "xenial"
+  <<: *build
+
+# Should be fixed asap.
+.build:ubuntu1604:
+  variables:
+    UBUNTU_VERSION: "17.10"
+    EXTRA_TAGS: "artful"
+  <<: *build
+
+build:ubuntu1604:
+  variables:
+    UBUNTU_VERSION: "18.04"
+    EXTRA_TGS: "bionic latest"
+  <<: *build
