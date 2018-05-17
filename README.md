@@ -6,8 +6,8 @@ Tesseract OCR 4 running on Ubuntu.
 
 Versions indicates ubuntu version, not tesseract version. All versions uses tesseract 4.
 
-* `latest`, `18.04`
-* `16.04`
+* `latest`, `18.04`, `bionic`
+* `16.04`, `xenial`
 
 ## Example run
 
