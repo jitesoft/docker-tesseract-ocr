@@ -6,7 +6,7 @@
   script:
     - HASH=$(docker build --build-arg UBUNTU_VERSION=${UBUNTU_VERSION} -q .)
     - TAGS="${UBUNTU_VERSION} ${EXTRA_TAGS}"
-    - for tag in $TAGS; do docker tag $BUILD jitesoft/tesseract-ocr:${tag}; docker push jitesoft/tesseract-ocr:${tag}; done
+    - for tag in $TAGS; do docker tag $HASH jitesoft/tesseract-ocr:${tag}; docker push jitesoft/tesseract-ocr:${tag}; done
 
 build:ubuntu1604:
   variables:
