@@ -17,4 +17,4 @@ RUN if [ "${UBUNTU_VERSION}" = "16.04" ]; then \
     && apt-get autoremove
 
 ENTRYPOINT ["tesseract"]
-CMD ['help']
+CMD ["help"]

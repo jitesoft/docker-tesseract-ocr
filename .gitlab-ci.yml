@@ -14,13 +14,6 @@ build:ubuntu1604:
     EXTRA_TAGS: "xenial"
   <<: *build
 
-# Should be fixed asap.
-.build:ubuntu1710:
-  variables:
-    UBUNTU_VERSION: "17.10"
-    EXTRA_TAGS: "artful"
-  <<: *build
-
 build:ubuntu1804:
   variables:
     UBUNTU_VERSION: "18.04"
