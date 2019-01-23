@@ -1,6 +1,8 @@
 
 .build: &build
   image: docker:latest
+  services:
+    - docker:dind
   before_script:
     - echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USER} --password-stdin
   script:
