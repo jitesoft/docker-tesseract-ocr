@@ -17,3 +17,7 @@ docker run -v /path/to/image/:/tmp jitesoft/tesseract-ocr /tmp/img.jpg stdout
 ```
 
 Use high DPI image for best result. Higher DPI does increase the time to run though.
+
+---
+
+Image can be found at [gitlab](https://gitlab.com/jitesoft/dockerfiles/tesseract-ubuntu) or [github](https://github.com/jitesoft/docker-tesseract-ocr)
