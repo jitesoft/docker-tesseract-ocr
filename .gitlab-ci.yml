@@ -1,3 +1,5 @@
+include:
+  - https://gitlab.com/jitesoft/gitlab-ci-lib/raw/master/container_scan.yml
 
 .build: &build
   image: docker:latest
@@ -6,9 +8,9 @@
   before_script:
     - echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USER} --password-stdin
   script:
-    - HASH=$(docker build --build-arg UBUNTU_VERSION=${UBUNTU_VERSION} -q .)
+    - docker build --build-arg UBUNTU_VERSION=${UBUNTU_VERSION} --network host -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} .
     - TAGS="${UBUNTU_VERSION} ${EXTRA_TAGS}"
-    - for tag in $TAGS; do docker tag $HASH jitesoft/tesseract-ocr:${tag}; docker push jitesoft/tesseract-ocr:${tag}; done
+    - for tag in $TAGS; do docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} jitesoft/tesseract-ocr:${tag}; docker push jitesoft/tesseract-ocr:${tag}; done
 
 build:ubuntu1604:
   variables:
@@ -21,3 +23,13 @@ build:ubuntu1804:
     UBUNTU_VERSION: "18.04"
     EXTRA_TAGS: "bionic latest"
   <<: *build
+
+scan:ubuntu1804:
+  extends: .container_scanning
+  variables:
+    SCANNING_IMAGE_NAME: "jitesoft/tesseract-ocr:16.04"
+
+scan:ubuntu1604:
+  extends: .container_scanning
+  variables:
+    SCANNING_IMAGE_NAME: "jitesoft/tesseract-ocr:16.04"
