@@ -14,7 +14,7 @@ Versions indicates OS version (or OS name in the case of alpine), not Tesseract 
 * `18.04`, `bionic`
 * `alpine`
 
-# Un-maintained versions:
+#### Un-maintained versions:
 
 * `16.04`, `xenial`
 
@@ -43,3 +43,9 @@ Image can be found at [gitlab](https://gitlab.com/jitesoft/dockerfiles/tesseract
 ### Image labels
 
 This image follows the [Jitesoft image label specification 1.0.0](https://gitlab.com/snippets/1866155).
+
+## Licenses
+
+The images and scripts in the repository are released under the [MIT license](https://gitlab.com/jitesoft/dockerfiles/tesseract/blob/master/LICENSE).
+
+Tesseract is released under the [Apache License v2](https://github.com/tesseract-ocr/tesseract/blob/master/LICENSE)
