@@ -1,9 +1,13 @@
 stages:
+  - download
   - build
   - scan
 
 include:
   - https://gitlab.com/jitesoft/gitlab-ci-lib/raw/master/container_scan.yml
+
+# wget -qO- https://github.com/tesseract-ocr/tesseract/releases/latest | grep -oP '(?<=releases\/tag\/)(.*?)(?=\&)' | awk 'NR==1{print $1}'
+# For future reference...
 
 .build:ubuntu:
   stage: build
@@ -53,12 +57,48 @@ build:ubuntu:18.04:
   extends: .build:ubuntu
   variables:
     UBUNTU_VERSION: "18.04"
-    TAGS: "18.04 bionic latest"
+    TAGS: "18.04 bionic"
+
+build:ubuntu:18.10:
+  extends: .build:ubuntu
+  variables:
+    UBUNTU_VERSION: "18.10"
+    TAGS: "18.10 cosmic"
+
+build:ubuntu:19.04:
+  extends: .build:ubuntu
+  variables:
+    UBUNTU_VERSION: "19.04"
+    TAGS: "19.04 disco"
+
+build:ubuntu:19.10:
+  extends: .build:ubuntu
+  variables:
+    UBUNTU_VERSION: "19.10"
+    TAGS: "19.10 eoan latest"
 
 scan:ubuntu:18.04:
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:18.04"
+
+
+scan:ubuntu:18.10:
+  extends: .container_scanning
+  variables:
+    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:18.10"
+
+
+scan:ubuntu:19.04:
+  extends: .container_scanning
+  variables:
+    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:19.04"
+
+
+scan:ubuntu:19.10:
+  extends: .container_scanning
+  variables:
+    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:19.10"
 
 
 scan:alpine:
