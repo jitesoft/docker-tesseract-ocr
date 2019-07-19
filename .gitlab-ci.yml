@@ -18,16 +18,10 @@ include:
     - |
       for tag in ${TAGS}; do
         docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-${UBUNTU_VERSION} ${CI_REGISTRY_IMAGE}:${tag}
+        docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-${UBUNTU_VERSION} jitesoft/tesseract-ocr:${tag}
         docker push ${CI_REGISTRY_IMAGE}:${tag}
+        docker push jitesoft/tesseract-ocr:${tag}
       done
-    #- for tag in $TAGS; do docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} jitesoft/tesseract-ocr:${tag}; docker push jitesoft/tesseract-ocr:${tag}; done
-
-#build:ubuntu1604:
-#  variables:
-#    UBUNTU_VERSION: "16.04"
-#    EXTRA_TAGS: "xenial"
-#  <<: *build
-
 
 .build:alpine:
   variables:
@@ -45,6 +39,8 @@ include:
       for tag in ${TAGS}; do
         docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-alpine ${CI_REGISTRY_IMAGE}:${tag}
         docker push ${CI_REGISTRY_IMAGE}:${tag}
+        docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-alpine jitesoft/tesseract-ocr:${tag}
+        docker push jitesoft/tesseract-ocr:${tag}
       done
 
 
