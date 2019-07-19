@@ -7,21 +7,26 @@ include:
 
 .build: &build
   stage: build
-  image: docker:latest
+  image: registry.gitlab.com/jitesoft/dockerfiles/docker:18.09.6
   services:
-    - docker:dind
+    - registry.gitlab.com/jitesoft/dockerfiles/docker/dind:18.09.6
   before_script:
     - echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USER} --password-stdin
   script:
-    - docker build --build-arg UBUNTU_VERSION=${UBUNTU_VERSION} --network host -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} .
+    - docker build --build-arg BASE_IMAGE="registry.gitlab.com/jitesoft/dockerfiles/ubuntu:${UBUNTU_VERSION}" -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-${UBUNTU_VERSION} .
     - TAGS="${UBUNTU_VERSION} ${EXTRA_TAGS}"
-    - for tag in $TAGS; do docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} jitesoft/tesseract-ocr:${tag}; docker push jitesoft/tesseract-ocr:${tag}; done
+    - |
+      for tag in ${TAGS}; do
+        docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-${UBUNTU_VERSION} ${CI_REGISTRY_IMAGE}:${tag}
+        docker push ${CI_REGISTRY_IMAGE}:${tag}
+      done
+    #- for tag in $TAGS; do docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} jitesoft/tesseract-ocr:${tag}; docker push jitesoft/tesseract-ocr:${tag}; done
 
-build:ubuntu1604:
-  variables:
-    UBUNTU_VERSION: "16.04"
-    EXTRA_TAGS: "xenial"
-  <<: *build
+#build:ubuntu1604:
+#  variables:
+#    UBUNTU_VERSION: "16.04"
+#    EXTRA_TAGS: "xenial"
+#  <<: *build
 
 build:ubuntu1804:
   variables:
@@ -32,9 +37,9 @@ build:ubuntu1804:
 scan:ubuntu1804:
   extends: .container_scanning
   variables:
-    SCANNING_IMAGE_NAME: "jitesoft/tesseract-ocr:16.04"
+    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:18.04"
 
-scan:ubuntu1604:
-  extends: .container_scanning
-  variables:
-    SCANNING_IMAGE_NAME: "jitesoft/tesseract-ocr:16.04"
+#scan:ubuntu1604:
+#  extends: .container_scanning
+#  variables:
+#    SCANNING_IMAGE_NAME: "jitesoft/tesseract-ocr:16.04"
