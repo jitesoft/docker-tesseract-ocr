@@ -4,10 +4,28 @@ Tesseract OCR 4 running on Ubuntu.
 
 ## Tags
 
-Versions indicates ubuntu version, not tesseract version. All versions uses tesseract 4.
+Versions indicates OS version (or OS name in the case of alpine), not Tesseract version. All versions uses Tesseract 4.
 
-* `latest`, `18.04`, `bionic`
+### Docker Hub
+
+* `latest`, `19.10`, `eoan`
+* `19.04`, `disco`
+* `18.10`, `cosmic`
+* `18.04`, `bionic`
+* `alpine`
+
+# Un-maintained versions:
+
 * `16.04`, `xenial`
+
+### GitLab
+
+* `registry.gitlab.com/jitesoft/dockerfiles/tesseract`
+  * `latest`, `19.10`, `eoan`
+  * `19.04`, `disco`
+  * `18.10`, `cosmic`
+  * `18.04`, `bionic`
+  * `alpine`
 
 ## Example run
 
@@ -20,4 +38,8 @@ Use high DPI image for best result. Higher DPI does increase the time to run tho
 
 ---
 
-Image can be found at [gitlab](https://gitlab.com/jitesoft/dockerfiles/tesseract-ubuntu) or [github](https://github.com/jitesoft/docker-tesseract-ocr)
+Image can be found at [gitlab](https://gitlab.com/jitesoft/dockerfiles/tesseract) or [github](https://github.com/jitesoft/docker-tesseract-ocr)
+
+### Image labels
+
+This image follows the [Jitesoft image label specification 1.0.0](https://gitlab.com/snippets/1866155).

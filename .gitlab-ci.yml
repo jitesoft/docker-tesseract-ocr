@@ -23,8 +23,8 @@ include:
       for tag in ${TAGS}; do
         docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-${UBUNTU_VERSION} ${CI_REGISTRY_IMAGE}:${tag}
         docker push ${CI_REGISTRY_IMAGE}:${tag}
-        #docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-${UBUNTU_VERSION} jitesoft/tesseract-ocr:${tag}
-        #docker push jitesoft/tesseract-ocr:${tag}
+        docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-${UBUNTU_VERSION} jitesoft/tesseract-ocr:${tag}
+        docker push jitesoft/tesseract-ocr:${tag}
       done
 
 .build:alpine:
@@ -43,8 +43,8 @@ include:
       for tag in ${TAGS}; do
         docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-alpine ${CI_REGISTRY_IMAGE}:${tag}
         docker push ${CI_REGISTRY_IMAGE}:${tag}
-        #docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-alpine jitesoft/tesseract-ocr:${tag}
-        #docker push jitesoft/tesseract-ocr:${tag}
+        docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-alpine jitesoft/tesseract-ocr:${tag}
+        docker push jitesoft/tesseract-ocr:${tag}
       done
 
 
