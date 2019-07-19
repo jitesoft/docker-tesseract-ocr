@@ -5,7 +5,7 @@ stages:
 include:
   - https://gitlab.com/jitesoft/gitlab-ci-lib/raw/master/container_scan.yml
 
-.build: &build
+.build:ubuntu:
   stage: build
   image: registry.gitlab.com/jitesoft/dockerfiles/docker:18.09.6
   services:
@@ -14,8 +14,7 @@ include:
     - echo ${CI_JOB_TOKEN} | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
     - echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USER} --password-stdin
   script:
-    - docker build --build-arg BASE_IMAGE="registry.gitlab.com/jitesoft/dockerfiles/ubuntu:${UBUNTU_VERSION}" -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-${UBUNTU_VERSION} .
-    - TAGS="${UBUNTU_VERSION} ${EXTRA_TAGS}"
+    - docker build --build-arg UBUNTU_VERSION="${UBUNTU_VERSION}" -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-${UBUNTU_VERSION} -f ubuntu/Dockerfile .
     - |
       for tag in ${TAGS}; do
         docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-${UBUNTU_VERSION} ${CI_REGISTRY_IMAGE}:${tag}
@@ -29,18 +28,44 @@ include:
 #    EXTRA_TAGS: "xenial"
 #  <<: *build
 
-build:ubuntu1804:
+
+.build:alpine:
+  variables:
+    TAGS: "alpine"
+  stage: build
+  image: registry.gitlab.com/jitesoft/dockerfiles/docker:18.09.6
+  services:
+    - registry.gitlab.com/jitesoft/dockerfiles/docker/dind:18.09.6
+  before_script:
+    - echo ${CI_JOB_TOKEN} | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
+    - echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USER} --password-stdin
+  script:
+    - docker build -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-alpine -f alpine/Dockerfile .
+    - |
+      for tag in ${TAGS}; do
+        docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-alpine ${CI_REGISTRY_IMAGE}:${tag}
+        docker push ${CI_REGISTRY_IMAGE}:${tag}
+      done
+
+
+build:alpine:latest:
+  extends: .build:alpine
+  variables:
+    TAGS: "alpine"
+
+build:ubuntu:18.04:
+  extends: .build:ubuntu
   variables:
     UBUNTU_VERSION: "18.04"
-    EXTRA_TAGS: "bionic latest"
-  <<: *build
+    TAGS: "18.04 bionic latest"
 
-scan:ubuntu1804:
+scan:ubuntu:18.04:
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:18.04"
 
-#scan:ubuntu1604:
-#  extends: .container_scanning
-#  variables:
-#    SCANNING_IMAGE_NAME: "jitesoft/tesseract-ocr:16.04"
+
+scan:alpine:
+  extends: .container_scanning
+  variables:
+    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:alpine"
