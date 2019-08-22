@@ -8,7 +8,7 @@ LABEL maintainer="Johannes Tegnér <johannes@jitesoft.com>" \
       com.jitesoft.project.repo.issues="https://gitlab.com/jitesoft/dockerfiles/tesseract/issues" \
       com.jitesoft.project.registry.uri="registry.gitlab.com/jitesoft/dockerfiles/tesseract"
 
-ENV TESSDATA_PREFIX="/usr/share/tessdata" \
+ENV TESSDATA_PREFIX="/usr/local/share/tessdata" \
     LIBLEPT_HEADERSDIR="/usr/local/include"
 
 ARG BUILD_DEPS="g++ autoconf automake libtool pkg-config libpng-dev libturbojpeg0-dev libtiff5-dev zlib1g-dev libwebp-dev libopenjp2-7-dev libgif-dev"

@@ -33,7 +33,7 @@ Versions indicates OS version (or OS name in the case of alpine), not Tesseract 
 ## Training and languages
 
 The default image have the english training data installed from start. The training data used is the "standard", that is neither "fast" or "best".  
-It's possible to train another language by invoking the `train-lang` script, followed by the language code (`eng`, `swe` etc). If you wish to use `fast` or `best`,
+It's possible to train another language by invoking the `train-lang` script, followed by the language code (ISO 639-2 `eng`, `swe` etc). If you wish to use `fast` or `best`,
 add that as an optional parameter after the language code (`train-lang eng --fast`).  
 The above could easily be done in a derived image:
 
@@ -50,7 +50,7 @@ https://github.com/tesseract-ocr/tessdata
 https://github.com/tesseract-ocr/tessdata_best  
 https://github.com/tesseract-ocr/tessdata_fast  
 
-It is also possible to just copy a traineddata file to the `/tessdata` directory of the container.
+It is also possible to just copy a traineddata file to the `/usr/local/share/tessdata` (`/usr/share/tessdata` on alpine) directory of the container.
 
 ## Example execution
 
