@@ -1,0 +1,30 @@
+#!/bin/ash
+
+LANGUAGE_CODE="${1}"
+TYPE=""
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --fast)
+            TYPE="_fast"
+            echo "Fetching trained data with 'fast' version."
+            break;;
+        --best)
+            TYPE="_best"
+            echo "Fetching trained data with 'best' version."
+            break;;
+         *)
+            echo "Fetching standard trained data."
+            break;;
+    esac
+done
+
+echo "Trying to install tesseract trained data for language with code: ${LANGUAGE_CODE}"
+URI="https://github.com/tesseract-ocr/tessdata${TYPE}/blob/master/${LANGUAGE_CODE}.traineddata?raw=true"
+apk add --no-cache wget
+
+if wget --spider "${URI}" >/dev/null 2>&1; then
+  wget -O "${TESSDATA_PREFIX}/${LANGUAGE_CODE}.traineddata"  "${URI}"
+else
+  echo "Invalid language code."
+fi
+apk del wget

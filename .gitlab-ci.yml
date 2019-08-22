@@ -9,7 +9,24 @@ include:
 # wget -qO- https://github.com/tesseract-ocr/tesseract/releases/latest | grep -oP '(?<=releases\/tag\/)(.*?)(?=\&)' | awk 'NR==1{print $1}'
 # For future reference...
 
+download:
+  image: registry.gitlab.com/jitesoft/dockerfiles/alpine
+  before_script:
+    - apk add --no-cache wget grep coreutils
+  script:
+    - TESS_VERSION=$(wget -qO- https://github.com/tesseract-ocr/tesseract/releases/latest | grep -oP '(?<=releases\/tag\/)(.*?)(?=\&)' | awk 'NR==1{print $1}')
+    - LEPT_VERSION=$(wget -qO- https://github.com/DanBloomberg/leptonica/releases/latest | grep -oP '(?<=releases\/tag\/)(.*?)(?=\&)' | awk 'NR==1{print $1}')
+    - wget -O tess.tar.gz https://github.com/tesseract-ocr/tesseract/archive/${TESS_VERSION}.tar.gz
+    - wget -O lept.tar.gz https://github.com/DanBloomberg/leptonica/archive/leptonica-${LEPT_VERSION}.tar.gz
+  artifacts:
+    paths:
+      - tess.tar.gz
+      - lept.tar.gz
+    expire_in: 5 days
+
 .build:ubuntu:
+  dependencies:
+    - download
   stage: build
   image: registry.gitlab.com/jitesoft/dockerfiles/docker:18.09.6
   services:
@@ -17,8 +34,11 @@ include:
   before_script:
     - echo ${CI_JOB_TOKEN} | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
     - echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USER} --password-stdin
+    - apk add --no-cache wget grep
+    - TESS_VERSION=$(wget -qO- https://github.com/tesseract-ocr/tesseract/releases/latest | grep -oP '(?<=releases\/tag\/)(.*?)(?=\&)' | awk 'NR==1{print $1}')
+    - LEPT_VERSION=$(wget -qO- https://github.com/DanBloomberg/leptonica/releases/latest | grep -oP '(?<=releases\/tag\/)(.*?)(?=\&)' | awk 'NR==1{print $1}')
   script:
-    - docker build --build-arg UBUNTU_VERSION="${UBUNTU_VERSION}" -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-${UBUNTU_VERSION} -f ubuntu/Dockerfile .
+    - docker build --build-arg UBUNTU_VERSION="${UBUNTU_VERSION}" --label "com.jitesoft.app.tesseract.version=${TESS_VERSION}" --label "com.jitesoft.app.leptonica.version=${LEPT_VERSION}" -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-${UBUNTU_VERSION} -f ubuntu/Dockerfile .
     - |
       for tag in ${TAGS}; do
         docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-${UBUNTU_VERSION} ${CI_REGISTRY_IMAGE}:${tag}

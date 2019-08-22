@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if [ "${1}" = "train-lang" ]; then
+  exec "$@"
+else
+  exec tesseract "$@"
+fi
