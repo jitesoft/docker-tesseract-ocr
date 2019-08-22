@@ -2,6 +2,7 @@
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/jitesoft/tesseract-ocr.svg)](https://cloud.docker.com/u/jitesoft/repository/docker/jitesoft/tesseract-ocr)
 [![Back project](https://img.shields.io/badge/Open%20Collective-Tip%20the%20devs!-blue.svg)](https://opencollective.com/jitesoft-open-source)
+[![pipeline status](https://gitlab.com/jitesoft/dockerfiles/tesseract/badges/master/pipeline.svg)](https://gitlab.com/jitesoft/dockerfiles/tesseract/commits/master)
 
 [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) - Ubuntu and Alpine linux images.
 
