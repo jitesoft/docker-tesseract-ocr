@@ -6,10 +6,8 @@ stages:
 include:
   - https://gitlab.com/jitesoft/gitlab-ci-lib/raw/master/container_scan.yml
 
-# wget -qO- https://github.com/tesseract-ocr/tesseract/releases/latest | grep -oP '(?<=releases\/tag\/)(.*?)(?=\&)' | awk 'NR==1{print $1}'
-# For future reference...
-
 download:
+  stage: download
   image: registry.gitlab.com/jitesoft/dockerfiles/alpine
   before_script:
     - apk add --no-cache wget grep coreutils
