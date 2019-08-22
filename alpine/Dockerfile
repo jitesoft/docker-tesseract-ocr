@@ -8,6 +8,7 @@ COPY ./entrypoint /usr/local/bin
 # Ubuntu 18.04 have tesseract-ocr v4 in the main repository, hence no need to add the tesseract repository on it.
 RUN apk add --no-cache tesseract-ocr \
  && mkdir -p ${TESSDATA_PREFIX} \
+ && chmod +x /usr/local/bin/entrypoint /usr/local/bin/train-lang \
  && train-lang eng --fast
 
 ENTRYPOINT ["entrypoint"]

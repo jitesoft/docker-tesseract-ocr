@@ -40,6 +40,7 @@ RUN apt-get update \
  && apt-get purge -y ${BUILD_DEPS} \
  && apt-get autoremove -y \
  && apt-get clean -y \
+ && chmod +x /usr/local/bin/entrypoint /usr/local/bin/train-lang \
  && train-lang eng
 
 ENTRYPOINT ["entrypoint"]
