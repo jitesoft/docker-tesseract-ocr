@@ -7,6 +7,8 @@ include:
   - https://gitlab.com/jitesoft/gitlab-ci-lib/raw/master/container_scan.yml
 
 download:
+  variables:
+    GIT_STRATEGY: none
   stage: download
   image: registry.gitlab.com/jitesoft/dockerfiles/alpine
   before_script:
@@ -15,7 +17,7 @@ download:
     - TESS_VERSION=$(wget -qO- https://github.com/tesseract-ocr/tesseract/releases/latest | grep -oP '(?<=releases\/tag\/)(.*?)(?=\&)' | awk 'NR==1{print $1}')
     - LEPT_VERSION=$(wget -qO- https://github.com/DanBloomberg/leptonica/releases/latest | grep -oP '(?<=releases\/tag\/)(.*?)(?=\&)' | awk 'NR==1{print $1}')
     - wget -O tess.tar.gz https://github.com/tesseract-ocr/tesseract/archive/${TESS_VERSION}.tar.gz
-    - wget -O lept.tar.gz https://github.com/DanBloomberg/leptonica/archive/leptonica-${LEPT_VERSION}.tar.gz
+    - wget -O lept.tar.gz https://github.com/DanBloomberg/leptonica/releases/download/${LEPT_VERSION/leptonica-${LEPT_VERSION.tar.gz
   artifacts:
     paths:
       - tess.tar.gz
