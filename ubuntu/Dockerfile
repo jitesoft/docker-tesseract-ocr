@@ -8,7 +8,7 @@ LABEL maintainer="Johannes Tegnér <johannes@jitesoft.com>" \
       com.jitesoft.project.repo.issues="https://gitlab.com/jitesoft/dockerfiles/tesseract/issues" \
       com.jitesoft.project.registry.uri="registry.gitlab.com/jitesoft/dockerfiles/tesseract"
 
-ENV TESSDATA_PREFIX="/tessdata" \
+ENV TESSDATA_PREFIX="/usr/share/tessdata" \
     LIBLEPT_HEADERSDIR="/usr/local/include"
 
 ARG BUILD_DEPS="g++ autoconf automake libtool pkg-config libpng-dev libturbojpeg0-dev libtiff5-dev zlib1g-dev libwebp-dev libopenjp2-7-dev libgif-dev"
@@ -21,7 +21,7 @@ COPY ./ubuntu/train-lang /usr/local/bin
 
 RUN apt-get update \
  && apt-get -y install ${BUILD_DEPS} ${RUNTIME_DEPS} \
- && mkdir -p ${TESSDATA_PREFIX} /tmp/tess /tmp/lept \
+ && mkdir -p /tmp/tess /tmp/lept \
  && cd /tmp \
  && tar -xzf lept.tar.gz --strip-components=1 -C lept \
  && tar -xzf tess.tar.gz --strip-components=1 -C tess  \
@@ -40,8 +40,7 @@ RUN apt-get update \
  && apt-get purge -y ${BUILD_DEPS} \
  && apt-get autoremove -y \
  && apt-get clean -y \
- && chmod +x /usr/local/bin/entrypoint /usr/local/bin/train-lang \
- && train-lang eng
+ && chmod +x /usr/local/bin/entrypoint /usr/local/bin/train-lang
 
 ENTRYPOINT ["entrypoint"]
 CMD ["tesseract"]
