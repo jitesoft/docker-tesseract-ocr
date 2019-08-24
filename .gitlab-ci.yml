@@ -18,10 +18,16 @@ download:
     - LEPT_VERSION=$(wget -qO- https://github.com/DanBloomberg/leptonica/releases/latest | grep -oP '(?<=releases\/tag\/)(.*?)(?=\&)' | awk 'NR==1{print $1}')
     - wget -O tess.tar.gz https://github.com/tesseract-ocr/tesseract/archive/${TESS_VERSION}.tar.gz
     - wget -O lept.tar.gz https://github.com/DanBloomberg/leptonica/releases/download/${LEPT_VERSION}/leptonica-${LEPT_VERSION}.tar.gz
+    - wget https://github.com/tesseract-ocr/tessdata/raw/3.04.00/equ.traineddata
+    - wget https://github.com/tesseract-ocr/tessdata/raw/3.04.00/osd.traineddata
+    - wget -O eng.traineddata https://github.com/tesseract-ocr/tessdata_fast/blob/master/eng.traineddata?raw=true
   artifacts:
     paths:
       - tess.tar.gz
       - lept.tar.gz
+      - osd.traineddata
+      - equ.traineddata
+      - eng.traineddata
     expire_in: 5 days
 
 .build:ubuntu:

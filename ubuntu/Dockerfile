@@ -40,8 +40,11 @@ RUN apt-get update \
  && apt-get purge -y ${BUILD_DEPS} \
  && apt-get autoremove -y \
  && apt-get clean -y \
- && chmod +x /usr/local/bin/entrypoint /usr/local/bin/train-lang \
- && train-lang eng --fast
+ && chmod +x /usr/local/bin/entrypoint /usr/local/bin/train-lang
+
+COPY ./osd.traineddata /usr/local/share/tessdata/
+COPY ./equ.traineddata /usr/local/share/tessdata/
+COPY ./eng.traineddata /usr/local/share/tessdata/
 
 ENTRYPOINT ["entrypoint"]
-CMD ["tesseract"]
+CMD ["--version"]
