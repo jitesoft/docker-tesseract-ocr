@@ -10,7 +10,7 @@ download:
   variables:
     GIT_STRATEGY: none
   stage: download
-  image: registry.gitlab.com/jitesoft/dockerfiles/alpine
+  image: registry.gitlab.com/jitesoft/dockerfiles/alpine:latest
   before_script:
     - apk add --no-cache wget grep coreutils
   script:
@@ -31,15 +31,13 @@ download:
     expire_in: 5 days
 
 .build:ubuntu:
+  needs:
+    - donwload
   dependencies:
     - download
   stage: build
-  image: registry.gitlab.com/jitesoft/dockerfiles/docker:18.09.6
-  services:
-    - registry.gitlab.com/jitesoft/dockerfiles/docker/dind:18.09.6
+  image: registry.gitlab.com/jitesoft/dockerfiles/docker:latest
   before_script:
-    - echo ${CI_JOB_TOKEN} | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
-    - echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USER} --password-stdin
     - apk add --no-cache wget grep
     - TESS_VERSION=$(wget -qO- https://github.com/tesseract-ocr/tesseract/releases/latest | grep -oP '(?<=releases\/tag\/)(.*?)(?=\&)' | awk 'NR==1{print $1}')
     - LEPT_VERSION=$(wget -qO- https://github.com/DanBloomberg/leptonica/releases/latest | grep -oP '(?<=releases\/tag\/)(.*?)(?=\&)' | awk 'NR==1{print $1}')
@@ -51,18 +49,15 @@ download:
         docker push ${CI_REGISTRY_IMAGE}:${tag}
         docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-${UBUNTU_VERSION} jitesoft/tesseract-ocr:${tag}
         docker push jitesoft/tesseract-ocr:${tag}
+        docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} quay.io/jitesoft/tesseract:${tag}
+        docker push quay.io/jitesoft/tesseract:${tag}
       done
 
 .build:alpine:
   variables:
     TAGS: "alpine"
   stage: build
-  image: registry.gitlab.com/jitesoft/dockerfiles/docker:18.09.6
-  services:
-    - registry.gitlab.com/jitesoft/dockerfiles/docker/dind:18.09.6
-  before_script:
-    - echo ${CI_JOB_TOKEN} | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
-    - echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USER} --password-stdin
+  image: registry.gitlab.com/jitesoft/dockerfiles/docker:latest
   script:
     - docker build -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-alpine -f alpine/Dockerfile .
     - |
@@ -71,6 +66,8 @@ download:
         docker push ${CI_REGISTRY_IMAGE}:${tag}
         docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-alpine jitesoft/tesseract-ocr:${tag}
         docker push jitesoft/tesseract-ocr:${tag}
+        docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-alpine quay.io/jitesoft/tesseract:${tag}
+        docker push quay.io/jitesoft/tesseract:${tag}
       done
 
 
@@ -104,30 +101,45 @@ build:ubuntu:19.10:
     TAGS: "19.10 eoan latest"
 
 scan:ubuntu:18.04:
+  needs:
+    - build:ubuntu:18.04
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:18.04"
+    GIT_STRATEGY: none
 
 
 scan:ubuntu:18.10:
+  needs:
+    - build:ubuntu:18.10
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:18.10"
+    GIT_STRATEGY: none
 
 
 scan:ubuntu:19.04:
+  needs:
+    - build:ubuntu:19.04
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:19.04"
+    GIT_STRATEGY: none
 
 
 scan:ubuntu:19.10:
+  needs:
+    - build:ubuntu:19.10
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:19.10"
+    GIT_STRATEGY: none
 
 
 scan:alpine:
+  needs:
+    - build:alpine
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:alpine"
+    GIT_STRATEGY: none

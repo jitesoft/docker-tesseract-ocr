@@ -12,30 +12,35 @@ Versions indicates OS version (or OS name in the case of alpine), not Tesseract 
 
 ### Docker Hub
 
-* `latest`, `19.10`, `eoan`
-* `19.04`, `disco`
-* `18.10`, `cosmic`
-* `18.04`, `bionic`
-* `alpine`
-
-#### Un-maintained versions:
-
-* `16.04`, `xenial`
+* `jitesoft/tesseract-ocr`
+    * `latest`, `19.10`, `eoan`
+    * `19.04`, `disco`
+    * `18.10`, `cosmic`
+    * `18.04`, `bionic`
+    * `alpine`
 
 ### GitLab
 
 * `registry.gitlab.com/jitesoft/dockerfiles/tesseract`
-  * `latest`, `19.10`, `eoan`
-  * `19.04`, `disco`
-  * `18.10`, `cosmic`
-  * `18.04`, `bionic`
-  * `alpine`
+    * `latest`, `19.10`, `eoan`
+    * `19.04`, `disco`
+    * `18.10`, `cosmic`
+    * `18.04`, `bionic`
+    * `alpine`
+
+### Quay.io
+
+* `quay.io/jitesoft/tesseract`
+    * `latest`, `19.10`, `eoan`
+    * `19.04`, `disco`
+    * `18.10`, `cosmic`
+    * `18.04`, `bionic`
+    * `alpine`
 
 ## Training and languages
 
-The default image have the english training data installed from start. The training data used is the "standard", that is neither "fast" or "best".  
-It's possible to train another language by invoking the `train-lang` script, followed by the language code (ISO 639-2 `eng`, `swe` etc). If you wish to use `fast` or `best`,
-add that as an optional parameter after the language code (`train-lang eng --fast`).  
+The default image have the english training data installed from start. The training data used is the "fast" data. It parses quicker but not at best quality.  
+It's possible to train another language by invoking the `train-lang` script, followed by the language code (ISO 639-2 `eng`, `swe` etc). If you wish to use `fast` or `best`, add that as an optional parameter after the language code (`train-lang eng --fast`) else use the standard without any extra arg.  
 The above could easily be done in a derived image:
 
 ```dockerfile 
