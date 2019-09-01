@@ -31,8 +31,6 @@ download:
     expire_in: 5 days
 
 .build:ubuntu:
-  needs:
-    - donwload
   dependencies:
     - download
   stage: build
@@ -138,7 +136,7 @@ scan:ubuntu:19.10:
 
 scan:alpine:
   needs:
-    - build:alpine
+    - build:alpine:latest
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:alpine"
