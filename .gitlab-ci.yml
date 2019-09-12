@@ -4,7 +4,7 @@ stages:
   - scan
 
 include:
-  - https://gitlab.com/jitesoft/gitlab-ci-lib/raw/master/container_scan.yml
+  - https://gitlab.com/jitesoft/gitlab-ci-lib/raw/master/container_scan-v2.yml
 
 download:
   variables:
