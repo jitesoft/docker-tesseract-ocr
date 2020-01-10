@@ -78,4 +78,6 @@ This image follows the [Jitesoft image label specification 1.0.0](https://gitlab
 ## Licenses
 
 The images and scripts in the repository are released under the [MIT license](https://gitlab.com/jitesoft/dockerfiles/tesseract/blob/master/LICENSE).  
-Tesseract is released under the [Apache License v2](https://github.com/tesseract-ocr/tesseract/blob/master/LICENSE)
+Tesseract is released under the [Apache License v2](https://github.com/tesseract-ocr/tesseract/blob/master/LICENSE)  
+
+Notice: The tesseract source have been modified with a patch (`alpine/tess.patch`) to allow for compilation in alpine linux.
