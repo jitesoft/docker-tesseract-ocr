@@ -90,7 +90,7 @@ build:alpine:arm:
     CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
     DOCKER_ARCH: "arm64"
   tags:
-    - native-aarch
+    - native-aarch64
 
 .containerize:ubuntu:
   dependencies:

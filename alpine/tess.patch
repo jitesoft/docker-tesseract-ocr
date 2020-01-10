@@ -1,0 +1,10 @@
+--- ocrclass.h	2020-01-10 12:26:33.307224500 +0100
++++ ocrclass.h	2020-01-10 12:26:58.748584300 +0100
+@@ -28,6 +28,7 @@
+
+ #include <chrono>
+ #include <ctime>
++#include <sys/time.h>
+ #ifdef _WIN32
+ #include <winsock2.h> // for timeval
+ #endif
