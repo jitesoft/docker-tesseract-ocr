@@ -64,7 +64,7 @@ download:
     - cd ${CI_PROJECT_DIR}
     - cp alpine/train-lang /usr/local/bin
     - mkdir -p /usr/local/share/tessdata
-    - cp *.traineddate /usr/local/share/tessdata
+    - cp eng.traineddate equ.traineddata osd.traineddata /usr/local/share/tessdata
     - cp entrypoint /usr/local/bin
     - chmod +x /usr/local/bin
     - $(cd usr/local && tar -czf ${CI_PROJECT_DIR}/tess-${DOCKER_ARCH}.tar.gz *)
