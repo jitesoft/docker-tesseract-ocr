@@ -82,7 +82,7 @@ build:alpine:amd:
     CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
     DOCKER_ARCH: "amd64"
   tags:
-    - native-amd
+    - native-amd64
 
 build:alpine:arm:
   extends: .build:alpine
