@@ -162,44 +162,30 @@ containerize:ubuntu:19.10:
     TAGS: "19.10 eoan latest"
 
 scan:ubuntu:18.04:
-  needs:
-    - build:ubuntu:18.04
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:18.04"
     GIT_STRATEGY: none
 
-
 scan:ubuntu:18.10:
-  needs:
-    - build:ubuntu:18.10
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:18.10"
     GIT_STRATEGY: none
 
-
 scan:ubuntu:19.04:
-  needs:
-    - build:ubuntu:19.04
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:19.04"
     GIT_STRATEGY: none
 
-
 scan:ubuntu:19.10:
-  needs:
-    - build:ubuntu:19.10
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:19.10"
     GIT_STRATEGY: none
 
-
 scan:alpine:
-  needs:
-    - build:alpine:latest
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:alpine"
