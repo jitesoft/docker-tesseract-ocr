@@ -22,8 +22,12 @@ download:
     - wget https://github.com/tesseract-ocr/tessdata/raw/3.04.00/equ.traineddata
     - wget https://github.com/tesseract-ocr/tessdata/raw/3.04.00/osd.traineddata
     - wget -O eng.traineddata https://github.com/tesseract-ocr/tessdata_fast/blob/master/eng.traineddata?raw=true
+    - printf "${TESS_VERSION}" > tess.txt
+    - printf "${LEPT_VERSION}" > lept.txt
   artifacts:
     paths:
+      - tess.txt
+      - lept.txt
       - tess.tar.gz
       - lept.tar.gz
       - osd.traineddata
@@ -49,16 +53,14 @@ download:
     - cd ${CI_PROJECT_DIR}/src/lept
     - ./configure
     - make
-    - find -type f -name '*.a' -delete
-    - find -type l -name '*.a' -delete
     - make install
     - cd ${CI_PROJECT_DIR}/src/tess
     - ./autogen.sh
     - ./configure
     - make
+    - make install
     - find -type f -name '*.a' -delete
     - find -type l -name '*.a' -delete
-    - make install
     - cd ${CI_PROJECT_DIR}
     - cp alpine/train-lang /usr/local/bin
     - mkdir -p /usr/local/share/tessdata
