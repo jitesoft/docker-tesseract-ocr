@@ -32,6 +32,7 @@ download:
     expire_in: 5 days
 
 .build:alpine:
+  stage: build
   dependencies:
     - download
   image: registry.gitlab.com/jitesoft/dockerfiles/misc/buildbase
@@ -111,12 +112,13 @@ build:alpine:arm:
         docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-${UBUNTU_VERSION} quay.io/jitesoft/tesseract:${tag}
         docker push quay.io/jitesoft/tesseract:${tag}
       done
+  tags: [protected, jitesoft, buildx]
 
 .containerize:alpine:
   variables:
     TAGS: "alpine"
   stage: containerize
-  image: registry.gitlab.com/jitesoft/dockerfiles/docker:latest
+  image: registry.gitlab.com/jitesoft/dockerfiles/buildx:latest
   script:
     - docker build -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-alpine -f alpine/Dockerfile .
     - |
@@ -128,7 +130,7 @@ build:alpine:arm:
         docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-alpine quay.io/jitesoft/tesseract:${tag}
         docker push quay.io/jitesoft/tesseract:${tag}
       done
-
+  tags: [protected, jitesoft, buildx]
 
 containerize:alpine:latest:
   extends: .containerize:alpine
