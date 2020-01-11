@@ -67,7 +67,7 @@ download:
     - cp eng.traineddata equ.traineddata osd.traineddata /usr/local/share/tessdata
     - cp entrypoint /usr/local/bin
     - chmod +x /usr/local/bin
-    - $(cd usr/local && tar -czf ${CI_PROJECT_DIR}/tess-${DOCKER_ARCH}.tar.gz *)
+    - $(cd /usr/local && tar -czf ${CI_PROJECT_DIR}/tess-${DOCKER_ARCH}.tar.gz *)
   cache:
     paths:
       - ccache
