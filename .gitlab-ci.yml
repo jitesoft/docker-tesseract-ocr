@@ -35,6 +35,33 @@ download:
       - eng.traineddata
     expire_in: 5 days
 
+.build:ubuntu:
+  image: registry.gitlab.com/jitesoft/dockerfiles/ubuntu:latest
+  before_script:
+    - ccache apk add --no-cache g++ autoconf automake libtool pkg-config libpng-dev libturbojpeg0-dev libtiff5-dev zlib1g-dev libwebp-dev libopenjp2-7-dev libgif-dev
+    - if [ ! -d "ccache" ]; then mkdir ccache; fi
+    - export PATH="/usr/lib/ccache/bin:$PATH"
+  script:
+    - mkdir -p src/tess
+    - mkdir -p src/lept
+    - tar -xhzf lept.tar.gz -C src/lept --strip-components=1
+    - tar -xhzf tess.tar.gz -C src/tess --strip-components=1
+    - cd ${CI_PROJECT_DIR}/src/lept
+    - ./configure
+    - make
+    - make install
+    - cd ${CI_PROJECT_DIR}/src/tess
+    - ./autogen.sh
+    - ./configure --with-extra-libraries=/usr/local/lib \
+    - make
+    - make install
+    - cd ${CI_PROJECT_DIR}
+    - cp entrypoint /usr/local/bin/entrypoint
+    - mkdir -p /usr/local/share/tessdata
+    - cp eng.traineddata equ.traineddata osd.traineddata /usr/local/share/tessdata
+    - chmod -R +x /usr/local/bin
+    - $(cd /usr/local && tar -czf ${CI_PROJECT_DIR}/tess-${DOCKER_ARCH}.tar.gz *)
+
 .build:alpine:
   stage: build
   dependencies:
@@ -68,13 +95,15 @@ download:
     - cp entrypoint /usr/local/bin
     - chmod +x /usr/local/bin
     - $(cd /usr/local && tar -czf ${CI_PROJECT_DIR}/tess-${DOCKER_ARCH}.tar.gz *)
+    - mkdir binaries
+    - mv tess-${DOCKER_ARCH}.tar.gz binaries/
   cache:
     paths:
       - ccache
     key: tess.build.ccache-${DOCKER_ARCH}
   artifacts:
     paths:
-      - tess-${DOCKER_ARCH}.tar.gz
+      - binaries
       - tess.txt
       - lept.txt
     when: on_success
@@ -100,7 +129,7 @@ build:alpine:arm:
   dependencies:
     - download
   stage: containerize
-  image: registry.gitlab.com/jitesoft/dockerfiles/buildx:latest
+  image: registry.gitlab.com/jitesoft/dockerfiles/docker/buildx:latest
   before_script:
     - apk add --no-cache wget grep
     - TESS_VERSION=$(wget -qO- https://github.com/tesseract-ocr/tesseract/releases/latest | grep -oP '(?<=releases\/tag\/)(.*?)(?=\&)' | awk 'NR==1{print $1}')
@@ -125,7 +154,7 @@ build:alpine:arm:
     - build:alpine:arm
     - build:alpine:amd
   stage: containerize
-  image: registry.gitlab.com/jitesoft/dockerfiles/buildx:latest
+  image: registry.gitlab.com/jitesoft/dockerfiles/docker/buildx:latest
   script:
     - docker buildx build --push -t jitesoft/tesseract-ocr:alpine -t ${CI_REGISTRY_IMAGE}:alpine --platform linux/amd64,linux/arm64 --build-arg TESSERACT_VERSION="$(cat tess.txt)" --build-arg LEPTONICA_VERSION="$(cat lept.txt)" -f alpine/Dockerfile .
     - docker pull ${CI_REGISTRY_IMAGE}:alpine
