@@ -75,6 +75,8 @@ download:
   artifacts:
     paths:
       - tess-${DOCKER_ARCH}.tar.gz
+      - tess.txt
+      - lept.txt
     when: on_success
     expire_in: 2 hours
 
@@ -119,17 +121,17 @@ build:alpine:arm:
 .containerize:alpine:
   variables:
     TAGS: "alpine"
+  needs:
+    - build:alpine:arm
+    - build:alpine:amd
   stage: containerize
   image: registry.gitlab.com/jitesoft/dockerfiles/buildx:latest
   script:
-    - docker build -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-alpine -f alpine/Dockerfile .
+    - docker buildx build --push -t jitesoft/tesseract-ocr:alpine -t ${CI_REGISTRY_IMAGE}:alpine --platform linux/amd64,linux/arm64 --build-arg TESSERACT_VERSION="$(cat tess.txt)" --build-arg LEPTONICA_VERSION="$(cat lept.txt)" -f alpine/Dockerfile .
+    - docker pull ${CI_REGISTRY_IMAGE}:alpine
     - |
       for tag in ${TAGS}; do
-        docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-alpine ${CI_REGISTRY_IMAGE}:${tag}
-        docker push ${CI_REGISTRY_IMAGE}:${tag}
-        docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-alpine jitesoft/tesseract-ocr:${tag}
-        docker push jitesoft/tesseract-ocr:${tag}
-        docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-alpine quay.io/jitesoft/tesseract:${tag}
+        docker tag ${CI_REGISTRY_IMAGE}:alpine quay.io/jitesoft/tesseract:${tag}
         docker push quay.io/jitesoft/tesseract:${tag}
       done
   tags: [protected, jitesoft, buildx]
