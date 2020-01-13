@@ -26,7 +26,8 @@ RUN --mount=type=bind,source=./binaries,target=/tmp/tess \
  && tar -xzhf /tmp/tess/tess-${TARGETARCH}.tar.gz -C /usr/local \
  && apk del .extract \
  && apk add --no-cache --virtual .runtime-deps libpng libjpeg-turbo tiff zlib libwebp giflib openjpeg libstdc++ libgomp \
- && chmod -R +x /usr/local/bin
+ && chmod -R +x /usr/local/bin \
+ && rm -f /usr/local/lib/*.a
 
 USER tesseract
 ENTRYPOINT ["entrypoint"]
