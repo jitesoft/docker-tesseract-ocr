@@ -222,8 +222,6 @@ build:alpine:arm:
     - native-aarch64
 
 .containerize:ubuntu:
-  dependencies:
-    - download
   stage: containerize
   image: registry.gitlab.com/jitesoft/dockerfiles/docker/buildx:latest
   script:

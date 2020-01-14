@@ -17,7 +17,6 @@ Versions indicates OS version (or OS name in the case of alpine), not Tesseract 
 * `jitesoft/tesseract-ocr`
     * `latest`, `19.10`, `eoan`
     * `19.04`, `disco`
-    * `18.10`, `cosmic`
     * `18.04`, `bionic`
     * `alpine`
 
@@ -26,7 +25,6 @@ Versions indicates OS version (or OS name in the case of alpine), not Tesseract 
 * `registry.gitlab.com/jitesoft/dockerfiles/tesseract`
     * `latest`, `19.10`, `eoan`
     * `19.04`, `disco`
-    * `18.10`, `cosmic`
     * `18.04`, `bionic`
     * `alpine`
 
@@ -35,7 +33,6 @@ Versions indicates OS version (or OS name in the case of alpine), not Tesseract 
 * `quay.io/jitesoft/tesseract`
     * `latest`, `19.10`, `eoan`
     * `19.04`, `disco`
-    * `18.10`, `cosmic`
     * `18.04`, `bionic`
     * `alpine`
 
