@@ -4,7 +4,9 @@
 [![Back project](https://img.shields.io/badge/Open%20Collective-Tip%20the%20devs!-blue.svg)](https://opencollective.com/jitesoft-open-source)
 [![pipeline status](https://gitlab.com/jitesoft/dockerfiles/tesseract/badges/master/pipeline.svg)](https://gitlab.com/jitesoft/dockerfiles/tesseract/commits/master)
 
-[Tesseract OCR](https://github.com/tesseract-ocr/tesseract) - Ubuntu and Alpine linux images.
+[Tesseract OCR](https://github.com/tesseract-ocr/tesseract) - Ubuntu and Alpine linux images.  
+
+Tesseract and Leptonica are both built from source for each platform and distro, supported platforms are amd64 (x86_64) arm64 (aarch64).
 
 ## Tags
 
@@ -36,6 +38,8 @@ Versions indicates OS version (or OS name in the case of alpine), not Tesseract 
     * `18.10`, `cosmic`
     * `18.04`, `bionic`
     * `alpine`
+
+Ubuntu "cosmic" (18.10) have reached the end of life as of january 2020, so it is no longer maintained.
 
 ## Training and languages
 
