@@ -54,6 +54,7 @@ download:
     - locale-gen en_US.UTF-8
     - dpkg-reconfigure --frontend=noninteractive locales
     - apt-get install -y ccache g++ gcc autoconf automake libtool pkg-config libpng-dev libturbojpeg0-dev libtiff5-dev zlib1g-dev libwebp-dev libopenjp2-7-dev libgif-dev
+    - export PATH="/usr/lib/ccache/bin:$PATH"
   script:
     - mkdir -p src/tess
     - mkdir -p src/lept
@@ -94,7 +95,6 @@ build:ubuntu:amd:19.10:
     CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
     DOCKER_ARCH: "amd64"
     UBUNTU_VERSION: "19.10"
-    PATH: "/usr/lib/ccache/bin:$PATH"
     CCACHE_COMPRESS: "true"
     CCACHE_MAXSIZE: "128M"
   tags:
@@ -106,7 +106,6 @@ build:ubuntu:arm:19.10:
     CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
     DOCKER_ARCH: "arm64"
     UBUNTU_VERSION: "19.10"
-    PATH: "/usr/lib/ccache/bin:$PATH"
     CCACHE_COMPRESS: "true"
     CCACHE_MAXSIZE: "128M"
   tags:
@@ -118,7 +117,6 @@ build:ubuntu:amd:19.04:
     CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
     DOCKER_ARCH: "amd64"
     UBUNTU_VERSION: "19.04"
-    PATH: "/usr/lib/ccache/bin:$PATH"
     CCACHE_COMPRESS: "true"
     CCACHE_MAXSIZE: "128M"
   tags:
@@ -130,7 +128,6 @@ build:ubuntu:arm:19.04:
     CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
     DOCKER_ARCH: "arm64"
     UBUNTU_VERSION: "19.04"
-    PATH: "/usr/lib/ccache/bin:$PATH"
     CCACHE_COMPRESS: "true"
     CCACHE_MAXSIZE: "128M"
   tags:
@@ -142,7 +139,6 @@ build:ubuntu:amd:18.04:
     CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
     DOCKER_ARCH: "amd64"
     UBUNTU_VERSION: "18.04"
-    PATH: "/usr/lib/ccache/bin:$PATH"
     CCACHE_COMPRESS: "true"
     CCACHE_MAXSIZE: "128M"
   tags:
@@ -154,7 +150,6 @@ build:ubuntu:arm:18.04:
     CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
     DOCKER_ARCH: "arm64"
     UBUNTU_VERSION: "18.04"
-    PATH: "/usr/lib/ccache/bin:$PATH"
     CCACHE_COMPRESS: "true"
     CCACHE_MAXSIZE: "128M"
   tags:
