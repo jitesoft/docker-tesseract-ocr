@@ -56,6 +56,7 @@ download:
     - apt-get install -y ccache g++ gcc autoconf automake libtool pkg-config libpng-dev libturbojpeg0-dev libtiff5-dev zlib1g-dev libwebp-dev libopenjp2-7-dev libgif-dev
     - update-ccache-symlinks
     - export PATH="/usr/lib/ccache:$PATH"
+    - ccache -s
   script:
     - mkdir -p src/tess
     - mkdir -p src/lept
@@ -78,6 +79,7 @@ download:
     - $(cd /usr/local && tar -czf ${CI_PROJECT_DIR}/tess-${DOCKER_ARCH}.tar.gz *)
     - mkdir binaries
     - mv tess-${DOCKER_ARCH}.tar.gz binaries/
+    - ccache -s
   cache:
     paths:
       - ccache
@@ -219,7 +221,7 @@ build:alpine:arm:
 
 .containerize:ubuntu:
   stage: containerize
-  image: registry.gitlab.com/jitesoft/dockerfiles/docker/buildx:latest
+  image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
   script:
     - TAGLIST=$(helper taglist "jitesoft/tesseract-ocr,${CI_REGISTRY_IMAGE}" "${TAGS}")
     - docker buildx build --push ${TAGLIST} --platform "linux/amd64,linux/arm64" --build-arg TESSERACT_VERSION="$(cat tess.txt)" --build-arg LEPTONICA_VERSION="$(cat lept.txt)" -f ubuntu/Dockerfile .
