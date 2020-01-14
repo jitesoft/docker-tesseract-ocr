@@ -42,7 +42,7 @@ download:
     - download
   before_script:
     - apt-get update
-    - apt-get install -y ccache g++ autoconf automake libtool pkg-config libpng-dev libturbojpeg0-dev libtiff5-dev zlib1g-dev libwebp-dev libopenjp2-7-dev libgif-dev
+    - apt-get install -y ccache g++ gcc autoconf automake libtool pkg-config libpng-dev libturbojpeg0-dev libtiff5-dev zlib1g-dev libwebp-dev libopenjp2-7-dev libgif-dev
     - if [ ! -d "ccache" ]; then mkdir ccache; fi
     - export PATH="/usr/lib/ccache/bin:$PATH"
   script:
@@ -56,7 +56,7 @@ download:
     - make install
     - cd ${CI_PROJECT_DIR}/src/tess
     - ./autogen.sh
-    - ./configure --with-extra-libraries=/usr/local/lib \
+    - ./configure --with-extra-libraries=/usr/local/lib --build="$(arch)-linux-gnu" \
     - make
     - make install
     - cd ${CI_PROJECT_DIR}
