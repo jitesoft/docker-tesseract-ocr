@@ -36,9 +36,13 @@ download:
     expire_in: 5 days
 
 .build:ubuntu:
+  stage: build
   image: registry.gitlab.com/jitesoft/dockerfiles/ubuntu:latest
+  dependencies:
+    - download
   before_script:
-    - ccache apk add --no-cache g++ autoconf automake libtool pkg-config libpng-dev libturbojpeg0-dev libtiff5-dev zlib1g-dev libwebp-dev libopenjp2-7-dev libgif-dev
+    - apt-get update
+    - apt-get install -y ccache g++ autoconf automake libtool pkg-config libpng-dev libturbojpeg0-dev libtiff5-dev zlib1g-dev libwebp-dev libopenjp2-7-dev libgif-dev
     - if [ ! -d "ccache" ]; then mkdir ccache; fi
     - export PATH="/usr/lib/ccache/bin:$PATH"
   script:
@@ -61,6 +65,35 @@ download:
     - cp eng.traineddata equ.traineddata osd.traineddata /usr/local/share/tessdata
     - chmod -R +x /usr/local/bin
     - $(cd /usr/local && tar -czf ${CI_PROJECT_DIR}/tess-${DOCKER_ARCH}.tar.gz *)
+    - mkdir binaries
+    - mv tess-${DOCKER_ARCH}.tar.gz binaries/
+  cache:
+    paths:
+      - ccache
+    key: tess.ubuntu.build.ccache-${DOCKER_ARCH}
+  artifacts:
+    paths:
+      - binaries
+      - tess.txt
+      - lept.txt
+    when: on_success
+    expire_in: 2 hours
+
+build:ubuntu:amd:
+  extends: .build:ubuntu
+  variables:
+    CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
+    DOCKER_ARCH: "amd64"
+  tags:
+    - native-amd64
+
+build:ubuntu:arm:
+  extends: .build:ubuntu
+  variables:
+    CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
+    DOCKER_ARCH: "arm64"
+  tags:
+    - native-aarch64
 
 .build:alpine:
   stage: build
