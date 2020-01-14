@@ -54,7 +54,8 @@ download:
     - locale-gen en_US.UTF-8
     - dpkg-reconfigure --frontend=noninteractive locales
     - apt-get install -y ccache g++ gcc autoconf automake libtool pkg-config libpng-dev libturbojpeg0-dev libtiff5-dev zlib1g-dev libwebp-dev libopenjp2-7-dev libgif-dev
-    - export PATH="/usr/lib/ccache/bin:$PATH"
+    - update-ccache-symlinks
+    - export PATH="/usr/lib/ccache:$PATH"
   script:
     - mkdir -p src/tess
     - mkdir -p src/lept
@@ -80,7 +81,7 @@ download:
   cache:
     paths:
       - ccache
-    key: tess.ubuntu.build.ccache-${DOCKER_ARCH}-${DOCKER_VERSION}
+    key: tess.ubuntu.build.ccache-${DOCKER_ARCH}-${UBUNTU_VERSION}
   artifacts:
     paths:
       - binaries
