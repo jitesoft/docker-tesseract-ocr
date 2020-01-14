@@ -49,9 +49,10 @@ download:
     - download
   before_script:
     - apt-get update
+    - apt-get install -y locales
+    - locale-gen en_US.UFT-8
+    - dpkg-reconfigure --frontend=noninteractive locales
     - apt-get install -y ccache g++ gcc autoconf automake libtool pkg-config libpng-dev libturbojpeg0-dev libtiff5-dev zlib1g-dev libwebp-dev libopenjp2-7-dev libgif-dev
-    - locale-gen en_US.UTF-8
-    - dpkg-reconfigure locales
     - if [ ! -d "ccache" ]; then mkdir ccache; fi
     - export PATH="/usr/lib/ccache/bin:$PATH"
   script:
