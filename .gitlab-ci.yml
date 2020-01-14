@@ -94,7 +94,7 @@ build:ubuntu:amd:19.10:
     CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
     DOCKER_ARCH: "amd64"
     UBUNTU_VERSION: "19.10"
-    ENV PATH: "/usr/lib/ccache/bin:$PATH"
+    PATH: "/usr/lib/ccache/bin:$PATH"
     CCACHE_COMPRESS: "true"
     CCACHE_MAXSIZE: "128M"
   tags:
@@ -106,7 +106,7 @@ build:ubuntu:arm:19.10:
     CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
     DOCKER_ARCH: "arm64"
     UBUNTU_VERSION: "19.10"
-    ENV PATH: "/usr/lib/ccache/bin:$PATH"
+    PATH: "/usr/lib/ccache/bin:$PATH"
     CCACHE_COMPRESS: "true"
     CCACHE_MAXSIZE: "128M"
   tags:
@@ -118,7 +118,7 @@ build:ubuntu:amd:19.04:
     CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
     DOCKER_ARCH: "amd64"
     UBUNTU_VERSION: "19.04"
-    ENV PATH: "/usr/lib/ccache/bin:$PATH"
+    PATH: "/usr/lib/ccache/bin:$PATH"
     CCACHE_COMPRESS: "true"
     CCACHE_MAXSIZE: "128M"
   tags:
@@ -130,7 +130,7 @@ build:ubuntu:arm:19.04:
     CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
     DOCKER_ARCH: "arm64"
     UBUNTU_VERSION: "19.04"
-    ENV PATH: "/usr/lib/ccache/bin:$PATH"
+    PATH: "/usr/lib/ccache/bin:$PATH"
     CCACHE_COMPRESS: "true"
     CCACHE_MAXSIZE: "128M"
   tags:
@@ -142,7 +142,7 @@ build:ubuntu:amd:18.04:
     CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
     DOCKER_ARCH: "amd64"
     UBUNTU_VERSION: "18.04"
-    ENV PATH: "/usr/lib/ccache/bin:$PATH"
+    PATH: "/usr/lib/ccache/bin:$PATH"
     CCACHE_COMPRESS: "true"
     CCACHE_MAXSIZE: "128M"
   tags:
@@ -154,7 +154,7 @@ build:ubuntu:arm:18.04:
     CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
     DOCKER_ARCH: "arm64"
     UBUNTU_VERSION: "18.04"
-    ENV PATH: "/usr/lib/ccache/bin:$PATH"
+    PATH: "/usr/lib/ccache/bin:$PATH"
     CCACHE_COMPRESS: "true"
     CCACHE_MAXSIZE: "128M"
   tags:
