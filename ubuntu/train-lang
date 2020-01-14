@@ -20,12 +20,8 @@ done
 
 echo "Trying to install tesseract trained data for language with code: ${LANGUAGE_CODE}"
 URI="https://github.com/tesseract-ocr/tessdata${TYPE}/blob/master/${LANGUAGE_CODE}.traineddata?raw=true"
-apt-get install -y wget
-
 if wget --spider "${URI}" >/dev/null 2>&1; then
   wget -O "${TESSDATA_PREFIX}/${LANGUAGE_CODE}.traineddata" "${URI}"
 else
   echo "Invalid language code."
 fi
-
-apt-get purge -y wget

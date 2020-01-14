@@ -44,17 +44,16 @@ download:
 
 .build:ubuntu:
   stage: build
-  image: registry.gitlab.com/jitesoft/dockerfiles/ubuntu:latest
+  image: registry.gitlab.com/jitesoft/dockerfiles/ubuntu:${UBUNTU_VERSION}
   dependencies:
     - download
   before_script:
+    - if [ ! -d "ccache" ]; then mkdir ccache; fi
     - apt-get update
     - apt-get install -y locales
     - locale-gen en_US.UTF-8
     - dpkg-reconfigure --frontend=noninteractive locales
     - apt-get install -y ccache g++ gcc autoconf automake libtool pkg-config libpng-dev libturbojpeg0-dev libtiff5-dev zlib1g-dev libwebp-dev libopenjp2-7-dev libgif-dev
-    - if [ ! -d "ccache" ]; then mkdir ccache; fi
-    - export PATH="/usr/lib/ccache/bin:$PATH"
   script:
     - mkdir -p src/tess
     - mkdir -p src/lept
@@ -80,7 +79,7 @@ download:
   cache:
     paths:
       - ccache
-    key: tess.ubuntu.build.ccache-${DOCKER_ARCH}
+    key: tess.ubuntu.build.ccache-${DOCKER_ARCH}-${DOCKER_VERSION}
   artifacts:
     paths:
       - binaries
@@ -89,19 +88,75 @@ download:
     when: on_success
     expire_in: 2 hours
 
-build:ubuntu:amd:
+build:ubuntu:amd:19.10:
   extends: .build:ubuntu
   variables:
     CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
     DOCKER_ARCH: "amd64"
+    UBUNTU_VERSION: "19.10"
+    ENV PATH: "/usr/lib/ccache/bin:$PATH"
+    CCACHE_COMPRESS: "true"
+    CCACHE_MAXSIZE: "128M"
   tags:
     - native-amd64
 
-build:ubuntu:arm:
+build:ubuntu:arm:19.10:
   extends: .build:ubuntu
   variables:
     CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
     DOCKER_ARCH: "arm64"
+    UBUNTU_VERSION: "19.10"
+    ENV PATH: "/usr/lib/ccache/bin:$PATH"
+    CCACHE_COMPRESS: "true"
+    CCACHE_MAXSIZE: "128M"
+  tags:
+    - native-aarch64
+
+build:ubuntu:amd:19.04:
+  extends: .build:ubuntu
+  variables:
+    CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
+    DOCKER_ARCH: "amd64"
+    UBUNTU_VERSION: "19.04"
+    ENV PATH: "/usr/lib/ccache/bin:$PATH"
+    CCACHE_COMPRESS: "true"
+    CCACHE_MAXSIZE: "128M"
+  tags:
+    - native-amd64
+
+build:ubuntu:arm:19.04:
+  extends: .build:ubuntu
+  variables:
+    CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
+    DOCKER_ARCH: "arm64"
+    UBUNTU_VERSION: "19.04"
+    ENV PATH: "/usr/lib/ccache/bin:$PATH"
+    CCACHE_COMPRESS: "true"
+    CCACHE_MAXSIZE: "128M"
+  tags:
+    - native-aarch64
+
+build:ubuntu:amd:18.04:
+  extends: .build:ubuntu
+  variables:
+    CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
+    DOCKER_ARCH: "amd64"
+    UBUNTU_VERSION: "18.04"
+    ENV PATH: "/usr/lib/ccache/bin:$PATH"
+    CCACHE_COMPRESS: "true"
+    CCACHE_MAXSIZE: "128M"
+  tags:
+    - native-amd64
+
+build:ubuntu:arm:18.04:
+  extends: .build:ubuntu
+  variables:
+    CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
+    DOCKER_ARCH: "arm64"
+    UBUNTU_VERSION: "18.04"
+    ENV PATH: "/usr/lib/ccache/bin:$PATH"
+    CCACHE_COMPRESS: "true"
+    CCACHE_MAXSIZE: "128M"
   tags:
     - native-aarch64
 
@@ -129,8 +184,6 @@ build:ubuntu:arm:
     - ./configure
     - make
     - make install
-    - find -type f -name '*.a' -delete
-    - find -type l -name '*.a' -delete
     - cd ${CI_PROJECT_DIR}
     - cp alpine/train-lang /usr/local/bin
     - mkdir -p /usr/local/share/tessdata
@@ -173,19 +226,13 @@ build:alpine:arm:
     - download
   stage: containerize
   image: registry.gitlab.com/jitesoft/dockerfiles/docker/buildx:latest
-  before_script:
-    - apk add --no-cache wget grep
-    - TESS_VERSION=$(wget -qO- https://github.com/tesseract-ocr/tesseract/releases/latest | grep -oP '(?<=releases\/tag\/)(.*?)(?=\&)' | awk 'NR==1{print $1}')
-    - LEPT_VERSION=$(wget -qO- https://github.com/DanBloomberg/leptonica/releases/latest | grep -oP '(?<=releases\/tag\/)(.*?)(?=\&)' | awk 'NR==1{print $1}')
   script:
-    - docker build --build-arg UBUNTU_VERSION="${UBUNTU_VERSION}" --label "com.jitesoft.app.tesseract.version=${TESS_VERSION}" --label "com.jitesoft.app.leptonica.version=${LEPT_VERSION}" -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-${UBUNTU_VERSION} -f ubuntu/Dockerfile .
+    - TAGLIST=$(helper taglist "jitesoft/tesseract-ocr,${CI_REGISTRY_IMAGE}" "${TAGS}")
+    - docker buildx build --push ${TAGLIST} --platform "linux/amd64,linux/arm64" --build-arg TESSERACT_VERSION="$(cat tess.txt)" --build-arg LEPTONICA_VERSION="$(cat lept.txt)" -f ubuntu/Dockerfile .
+    - docker pull ${CI_REGISTRY_IMAGE}:${UBUNTU_VERSION}
     - |
       for tag in ${TAGS}; do
-        docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-${UBUNTU_VERSION} ${CI_REGISTRY_IMAGE}:${tag}
-        docker push ${CI_REGISTRY_IMAGE}:${tag}
-        docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-${UBUNTU_VERSION} jitesoft/tesseract-ocr:${tag}
-        docker push jitesoft/tesseract-ocr:${tag}
-        docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}-${UBUNTU_VERSION} quay.io/jitesoft/tesseract:${tag}
+        docker tag ${CI_REGISTRY_IMAGE}:${UBUNTU_VERSION} quay.io/jitesoft/tesseract:${tag}
         docker push quay.io/jitesoft/tesseract:${tag}
       done
   tags: [protected, jitesoft, buildx]
@@ -197,7 +244,7 @@ build:alpine:arm:
     - build:alpine:arm
     - build:alpine:amd
   stage: containerize
-  image: registry.gitlab.com/jitesoft/dockerfiles/docker/buildx:latest
+  image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
   script:
     - docker buildx build --push -t jitesoft/tesseract-ocr:alpine -t ${CI_REGISTRY_IMAGE}:alpine --platform linux/amd64,linux/arm64 --build-arg TESSERACT_VERSION="$(cat tess.txt)" --build-arg LEPTONICA_VERSION="$(cat lept.txt)" -f alpine/Dockerfile .
     - docker pull ${CI_REGISTRY_IMAGE}:alpine
@@ -214,39 +261,36 @@ containerize:alpine:latest:
     TAGS: "alpine"
 
 containerize:ubuntu:18.04:
+  needs:
+    - build:ubuntu:arm:18.04
+    - build:ubuntu:amd:18.04
   extends: .containerize:ubuntu
   variables:
     UBUNTU_VERSION: "18.04"
-    TAGS: "18.04 bionic"
-
-containerize:ubuntu:18.10:
-  extends: .containerize:ubuntu
-  variables:
-    UBUNTU_VERSION: "18.10"
-    TAGS: "18.10 cosmic"
+    TAGS: "18.04,bionic"
 
 containerize:ubuntu:19.04:
+  needs:
+    - build:ubuntu:arm:19.04
+    - build:ubuntu:amd:19.04
   extends: .containerize:ubuntu
   variables:
     UBUNTU_VERSION: "19.04"
-    TAGS: "19.04 disco"
+    TAGS: "19.04,disco"
 
 containerize:ubuntu:19.10:
+  needs:
+    - build:ubuntu:arm:19.10
+    - build:ubuntu:amd:19.10
   extends: .containerize:ubuntu
   variables:
     UBUNTU_VERSION: "19.10"
-    TAGS: "19.10 eoan latest"
+    TAGS: "19.10,eoan,latest"
 
 scan:ubuntu:18.04:
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:18.04"
-    GIT_STRATEGY: none
-
-scan:ubuntu:18.10:
-  extends: .container_scanning
-  variables:
-    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:18.10"
     GIT_STRATEGY: none
 
 scan:ubuntu:19.04:
