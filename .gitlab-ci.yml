@@ -227,7 +227,7 @@ build:alpine:arm:
     - docker buildx build --push ${TAGLIST} --platform "linux/amd64,linux/arm64" --build-arg TESSERACT_VERSION="$(cat tess.txt)" --build-arg LEPTONICA_VERSION="$(cat lept.txt)" -f ubuntu/Dockerfile .
     - docker pull ${CI_REGISTRY_IMAGE}:${UBUNTU_VERSION}
     - |
-      for tag in $( echo $TAGS | tr "," " "}; do
+      for tag in $( echo $TAGS | tr "," " "); do
         docker tag ${CI_REGISTRY_IMAGE}:${UBUNTU_VERSION} quay.io/jitesoft/tesseract:${tag}
         docker push quay.io/jitesoft/tesseract:${tag}
       done
