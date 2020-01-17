@@ -15,6 +15,7 @@ Versions indicates OS version (or OS name in the case of alpine), not Tesseract 
 ### Docker Hub
 
 * `jitesoft/tesseract-ocr`
+    * `next`, `20:04`, `focal` _(Ubuntu dev branch, not stable)_
     * `latest`, `19.10`, `eoan`
     * `19.04`, `disco`
     * `18.04`, `bionic`
@@ -23,6 +24,7 @@ Versions indicates OS version (or OS name in the case of alpine), not Tesseract 
 ### GitLab
 
 * `registry.gitlab.com/jitesoft/dockerfiles/tesseract`
+    * `next`, `20:04`, `focal` _(Ubuntu dev branch, not stable)_
     * `latest`, `19.10`, `eoan`
     * `19.04`, `disco`
     * `18.04`, `bionic`
@@ -31,6 +33,7 @@ Versions indicates OS version (or OS name in the case of alpine), not Tesseract 
 ### Quay.io
 
 * `quay.io/jitesoft/tesseract`
+    * `next`, `20:04`, `focal` _(Ubuntu dev branch, not stable)_
     * `latest`, `19.10`, `eoan`
     * `19.04`, `disco`
     * `18.04`, `bionic`
