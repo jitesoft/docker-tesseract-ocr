@@ -86,6 +86,28 @@ download:
     when: on_success
     expire_in: 2 hours
 
+build:ubuntu:amd:20.04:
+  extends: .build:ubuntu
+  variables:
+    CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
+    DOCKER_ARCH: "amd64"
+    UBUNTU_VERSION: "20.04"
+    CCACHE_COMPRESS: "true"
+    CCACHE_MAXSIZE: "128M"
+  tags:
+    - native-amd64
+
+build:ubuntu:arm:20.04:
+  extends: .build:ubuntu
+  variables:
+    CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
+    DOCKER_ARCH: "arm64"
+    UBUNTU_VERSION: "20.04"
+    CCACHE_COMPRESS: "true"
+    CCACHE_MAXSIZE: "128M"
+  tags:
+    - native-aarch64
+
 build:ubuntu:amd:19.10:
   extends: .build:ubuntu
   variables:
@@ -250,6 +272,15 @@ containerize:alpine:latest:
   variables:
     TAGS: "alpine"
 
+containerize:ubuntu:20.04:
+  needs:
+    - build:ubuntu:arm:20.04
+    - build:ubuntu:amd:20.04
+  extends: .containerize:ubuntu
+  variables:
+    UBUNTU_VERSION: "20.04"
+    TAGS: "20.04,focal,next"
+
 containerize:ubuntu:18.04:
   needs:
     - build:ubuntu:arm:18.04
@@ -293,6 +324,12 @@ scan:ubuntu:19.10:
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:19.10"
+    GIT_STRATEGY: none
+
+scan:ubuntu:20.04:
+  extends: .container_scanning
+  variables:
+    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:20.04"
     GIT_STRATEGY: none
 
 scan:alpine:
