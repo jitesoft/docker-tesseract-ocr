@@ -35,13 +35,6 @@ download:
       - eng.traineddata
     expire_in: 5 days
 
-#export LANGUAGE=en_US.UTF-8
-  #export LANG=en_US.UTF-8
-  #export LC_ALL=en_US.UTF-8
-  #locale-gen en_US.UTF-8
-  #dpkg-reconfigure locales
-
-
 .build:ubuntu:
   stage: build
   image: registry.gitlab.com/jitesoft/dockerfiles/ubuntu:${UBUNTU_VERSION}
@@ -73,6 +66,7 @@ download:
     - make install
     - cd ${CI_PROJECT_DIR}
     - cp entrypoint /usr/local/bin/entrypoint
+    - cp ubuntu/train-lang /usr/local/bin/train-lang
     - mkdir -p /usr/local/share/tessdata
     - cp eng.traineddata equ.traineddata osd.traineddata /usr/local/share/tessdata
     - chmod -R +x /usr/local/bin
@@ -224,7 +218,7 @@ build:alpine:arm:
   image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
   script:
     - TAGLIST=$(helper taglist "jitesoft/tesseract-ocr,${CI_REGISTRY_IMAGE}" "${TAGS}")
-    - docker buildx build --push ${TAGLIST} --platform "linux/amd64,linux/arm64" --build-arg TESSERACT_VERSION="$(cat tess.txt)" --build-arg LEPTONICA_VERSION="$(cat lept.txt)" -f ubuntu/Dockerfile .
+    - docker buildx build --push ${TAGLIST} --platform "linux/amd64,linux/arm64" --build-arg UBUNTU_VERSION="${UBUNTU_VERSION}" --build-arg TESSERACT_VERSION="$(cat tess.txt)" --build-arg LEPTONICA_VERSION="$(cat lept.txt)" -f ubuntu/Dockerfile .
     - docker pull ${CI_REGISTRY_IMAGE}:${UBUNTU_VERSION}
     - |
       for tag in $( echo $TAGS | tr "," " "); do

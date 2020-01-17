@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:experimental
-ARG UBUNTU_VERSION=19.04
+ARG UBUNTU_VERSION
 FROM registry.gitlab.com/jitesoft/dockerfiles/ubuntu:${UBUNTU_VERSION}
 ARG TESSERACT_VERSION
 ARG LEPTONICA_VERSION
