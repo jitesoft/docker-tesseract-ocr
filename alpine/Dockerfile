@@ -27,6 +27,7 @@ RUN --mount=type=bind,source=./binaries,target=/tmp/tess \
  && apk del .extract \
  && apk add --no-cache --virtual .runtime-deps libpng libjpeg-turbo tiff zlib libwebp giflib openjpeg libstdc++ libgomp \
  && chmod -R +x /usr/local/bin \
+ && chown -R tesseract:tesseract /usr/local/share \
  && rm -f /usr/local/lib/*.a
 
 USER tesseract

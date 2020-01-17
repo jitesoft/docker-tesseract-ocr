@@ -27,6 +27,7 @@ RUN --mount=type=bind,source=./binaries,target=/tmp/tess \
  && apt-get update \
  && apt-get -y install libgomp1 libgif7 libwebpmux3 libwebp6 libopenjp2-7 libpng16-16 libjpeg9 libtiff5 zlib1g wget \
  && chmod -R +x /usr/local/bin \
+ && chown -R tesseract:tesseract /usr/local/share \
  && rm -f /usr/local/lib/*.a \
  && apt-get autoremove -y \
  && apt-get clean -y
