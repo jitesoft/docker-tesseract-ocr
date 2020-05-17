@@ -41,6 +41,7 @@ download:
   dependencies:
     - download
   before_script:
+    - export DEBIAN_FRONTEND=noninteractive
     - if [ ! -d "ccache" ]; then mkdir ccache; fi
     - apt-get update
     - apt-get install -y locales
@@ -130,23 +131,23 @@ build:ubuntu:arm:19.10:
   tags:
     - native-aarch64
 
-build:ubuntu:amd:19.04:
+build:ubuntu:amd:20.10:
   extends: .build:ubuntu
   variables:
     CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
     DOCKER_ARCH: "amd64"
-    UBUNTU_VERSION: "19.04"
+    UBUNTU_VERSION: "20.10"
     CCACHE_COMPRESS: "true"
     CCACHE_MAXSIZE: "128M"
   tags:
     - native-amd64
 
-build:ubuntu:arm:19.04:
+build:ubuntu:arm:20.10:
   extends: .build:ubuntu
   variables:
     CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
     DOCKER_ARCH: "arm64"
-    UBUNTU_VERSION: "19.04"
+    UBUNTU_VERSION: "20.10"
     CCACHE_COMPRESS: "true"
     CCACHE_MAXSIZE: "128M"
   tags:
@@ -279,7 +280,7 @@ containerize:ubuntu:20.04:
   extends: .containerize:ubuntu
   variables:
     UBUNTU_VERSION: "20.04"
-    TAGS: "20.04,focal,next"
+    TAGS: "20.04,focal,lts,latest"
 
 containerize:ubuntu:18.04:
   needs:
@@ -290,14 +291,14 @@ containerize:ubuntu:18.04:
     UBUNTU_VERSION: "18.04"
     TAGS: "18.04,bionic"
 
-containerize:ubuntu:19.04:
+containerize:ubuntu:20.10:
   needs:
-    - build:ubuntu:arm:19.04
-    - build:ubuntu:amd:19.04
+    - build:ubuntu:arm:20.10
+    - build:ubuntu:amd:20.10
   extends: .containerize:ubuntu
   variables:
-    UBUNTU_VERSION: "19.04"
-    TAGS: "19.04,disco"
+    UBUNTU_VERSION: "20.10"
+    TAGS: "20.10,groovy,next"
 
 containerize:ubuntu:19.10:
   needs:
@@ -306,7 +307,7 @@ containerize:ubuntu:19.10:
   extends: .containerize:ubuntu
   variables:
     UBUNTU_VERSION: "19.10"
-    TAGS: "19.10,eoan,latest"
+    TAGS: "19.10,eoan"
 
 scan:ubuntu:18.04:
   extends: .container_scanning
@@ -317,7 +318,7 @@ scan:ubuntu:18.04:
 scan:ubuntu:19.04:
   extends: .container_scanning
   variables:
-    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:19.04"
+    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:20.10"
     GIT_STRATEGY: none
 
 scan:ubuntu:19.10:

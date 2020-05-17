@@ -15,31 +15,33 @@ Versions indicates OS version (or OS name in the case of alpine), not Tesseract 
 ### Docker Hub
 
 * `jitesoft/tesseract-ocr`
-    * `next`, `20:04`, `focal` _(Ubuntu dev branch, not stable)_
-    * `latest`, `19.10`, `eoan`
-    * `19.04`, `disco`
+    * `next`, `groovy`, `20.10`
+    * `latest`, `20.04`, `focal` _(Ubuntu dev branch, not stable)_
+    * `19.10`, `eoan`
     * `18.04`, `bionic`
     * `alpine`
 
 ### GitLab
 
 * `registry.gitlab.com/jitesoft/dockerfiles/tesseract`
-    * `next`, `20:04`, `focal` _(Ubuntu dev branch, not stable)_
-    * `latest`, `19.10`, `eoan`
-    * `19.04`, `disco`
+    * `next`, `groovy`, `20.10`
+    * `latest`, `20:04`, `focal` _(Ubuntu dev branch, not stable)_
+    * `19.10`, `eoan`
     * `18.04`, `bionic`
     * `alpine`
 
 ### Quay.io
 
 * `quay.io/jitesoft/tesseract`
-    * `next`, `20:04`, `focal` _(Ubuntu dev branch, not stable)_
-    * `latest`, `19.10`, `eoan`
-    * `19.04`, `disco`
+    * `next`, `groovy`, `20.10`
+    * `latest`, `20:04`, `focal` _(Ubuntu dev branch, not stable)_
+    * `19.10`, `eoan`
     * `18.04`, `bionic`
     * `alpine`
 
-Ubuntu "cosmic" (18.10) have reached the end of life as of january 2020, so it is no longer maintained.
+Ubuntu "cosmic" (18.10) have reached the end of life as of July 2019 and is no longer maintained.  
+Ubuntu "disco" (19.04) have reached the end of life as of January 2020 and is no longer maintained.  
+Ubuntu "eoan" (19.10) will reach the end of life on July 2020 and will after that no longer be maintained.  
 
 ## Training and languages
 
