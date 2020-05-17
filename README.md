@@ -16,7 +16,7 @@ Versions indicates OS version (or OS name in the case of alpine), not Tesseract 
 
 * `jitesoft/tesseract-ocr`
     * `next`, `groovy`, `20.10`
-    * `latest`, `20.04`, `focal` _(Ubuntu dev branch, not stable)_
+    * `latest`, `20.04`, `focal`, `lts`
     * `19.10`, `eoan`
     * `18.04`, `bionic`
     * `alpine`
@@ -25,7 +25,7 @@ Versions indicates OS version (or OS name in the case of alpine), not Tesseract 
 
 * `registry.gitlab.com/jitesoft/dockerfiles/tesseract`
     * `next`, `groovy`, `20.10`
-    * `latest`, `20:04`, `focal` _(Ubuntu dev branch, not stable)_
+    * `latest`, `20.04`, `focal`, `lts`
     * `19.10`, `eoan`
     * `18.04`, `bionic`
     * `alpine`
@@ -34,7 +34,7 @@ Versions indicates OS version (or OS name in the case of alpine), not Tesseract 
 
 * `quay.io/jitesoft/tesseract`
     * `next`, `groovy`, `20.10`
-    * `latest`, `20:04`, `focal` _(Ubuntu dev branch, not stable)_
+    * `latest`, `20.04`, `focal`, `lts`
     * `19.10`, `eoan`
     * `18.04`, `bionic`
     * `alpine`
