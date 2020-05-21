@@ -318,7 +318,7 @@ scan:ubuntu:18.04:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:18.04"
     GIT_STRATEGY: none
 
-scan:ubuntu:19.04:
+scan:ubuntu:20.10:
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:20.10"
