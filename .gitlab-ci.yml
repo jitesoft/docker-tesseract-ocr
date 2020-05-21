@@ -45,11 +45,9 @@ download:
     - if [ ! -d "ccache" ]; then mkdir ccache; fi
     - apt-get update
     - apt-get install -y locales
-    - |
-      case $UBUNTU_VERSION in (*20*)
-        apt-get install automake-1.15
-        apt-mark hold automake
-    - if [ "${UBUNTU_VERSION}" = "20.04" ]
+    - EXTRA_CONFIG_ARGS=""
+    - if [ "${UBUNTU_VERSION}" = "20.04" ]; then EXTRA_CONFIG_ARGS="--disable-dependency-tracking"
+    - if [ "${UBUNTU_VERSION}" = "20.10" ]; then EXTRA_CONFIG_ARGS="--disable-dependency-tracking"
     - locale-gen en_US.UTF-8
     - dpkg-reconfigure --frontend=noninteractive locales
     - apt-get install -y ccache g++ gcc autoconf automake-1.15 libtool pkg-config libpng-dev libturbojpeg0-dev libtiff5-dev zlib1g-dev libwebp-dev libopenjp2-7-dev libgif-dev
@@ -62,12 +60,12 @@ download:
     - tar -xhzf lept.tar.gz -C src/lept --strip-components=1
     - tar -xhzf tess.tar.gz -C src/tess --strip-components=1
     - cd ${CI_PROJECT_DIR}/src/lept
-    - ./configure --disable-dependency-tracking
+    - ./configure ${EXTRA_CONFIG_ARGS}
     - make
     - make install
     - cd ${CI_PROJECT_DIR}/src/tess
     - ./autogen.sh
-    - ./configure --with-extra-libraries=/usr/local/lib
+    - ./configure --with-extra-libraries=/usr/local/lib ${EXTRA_CONFIG_ARGS}
     - make
     - make install
     - cd ${CI_PROJECT_DIR}
