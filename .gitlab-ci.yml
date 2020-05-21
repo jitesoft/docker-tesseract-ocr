@@ -46,8 +46,8 @@ download:
     - apt-get update
     - apt-get install -y locales
     - EXTRA_CONFIG_ARGS=""
-    - if [ "${UBUNTU_VERSION}" = "20.04" ]; then EXTRA_CONFIG_ARGS="--disable-dependency-tracking"
-    - if [ "${UBUNTU_VERSION}" = "20.10" ]; then EXTRA_CONFIG_ARGS="--disable-dependency-tracking"
+    - if [ "${UBUNTU_VERSION}" = "20.04" ]; then EXTRA_CONFIG_ARGS="--disable-dependency-tracking"; fi
+    - if [ "${UBUNTU_VERSION}" = "20.10" ]; then EXTRA_CONFIG_ARGS="--disable-dependency-tracking"; fi
     - locale-gen en_US.UTF-8
     - dpkg-reconfigure --frontend=noninteractive locales
     - apt-get install -y ccache g++ gcc autoconf automake-1.15 libtool pkg-config libpng-dev libturbojpeg0-dev libtiff5-dev zlib1g-dev libwebp-dev libopenjp2-7-dev libgif-dev
