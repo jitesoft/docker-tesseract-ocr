@@ -191,8 +191,8 @@ build:ubuntu:arm:18.04:
     - mkdir -p src/lept
     - tar -xhzf lept.tar.gz -C src/lept --strip-components=1
     - tar -xhzf tess.tar.gz -C src/tess --strip-components=1
+    - apk add --no-cache pango-dev icu-dev cairo-dev libpng-dev libjpeg-turbo-dev tiff-dev libwebp-dev giflib-dev openjpeg-dev patch
     - patch src/tess/src/ccutil/ocrclass.h < alpine/tess.patch
-    - apk add --no-cache pango-dev icu-dev cairo-dev libpng-dev libjpeg-turbo-dev tiff-dev libwebp-dev giflib-dev openjpeg-dev
     - cd ${CI_PROJECT_DIR}/src/lept
     - ./configure
     - make
