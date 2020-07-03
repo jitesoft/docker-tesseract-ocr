@@ -68,7 +68,7 @@ It is also possible to just copy a traineddata file to the `/usr/local/share/tes
 
 ```bash
 docker pull jitesoft/tesseract-ocr
-docker run -v /path/to/image/img.jpg:/tmp jitesoft/tesseract-ocr /tmp/img.jpg stdout
+docker run -v /path/to/image/img.jpg:/tmp/img.jpg jitesoft/tesseract-ocr /tmp/img.jpg stdout
 ```
 
 Use high DPI image for best result. Higher DPI does increase the time to run though.
