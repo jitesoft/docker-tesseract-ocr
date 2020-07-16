@@ -88,7 +88,7 @@ download:
       - tess.txt
       - lept.txt
     when: on_success
-    expire_in: 2 hours
+    expire_in: 1 day
 
 build:ubuntu:amd:20.04:
   extends: .build:ubuntu
@@ -221,7 +221,7 @@ build:ubuntu:arm:18.04:
       - tess.txt
       - lept.txt
     when: on_success
-    expire_in: 2 hours
+    expire_in: 1 day
 
 build:alpine:amd:
   extends: .build:alpine
