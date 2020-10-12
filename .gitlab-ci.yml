@@ -240,7 +240,7 @@ build:alpine:arm:
   stage: containerize
   image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
   script:
-    - docker buildx build --push -t jitesoft/tesseract-ocr:alpine -t ${CI_REGISTRY_IMAGE}:alpine --platform linux/amd64,linux/arm64 --build-arg TESSERACT_VERSION="$(cat tess.txt)" --build-arg LEPTONICA_VERSION="$(cat lept.txt)" -f alpine/Dockerfile .
+    - docker buildx build --push -t ghcr.io/jitesoft/tesseract:alpine -t jitesoft/tesseract-ocr:alpine -t ${CI_REGISTRY_IMAGE}:alpine --platform linux/amd64,linux/arm64 --build-arg TESSERACT_VERSION="$(cat tess.txt)" --build-arg LEPTONICA_VERSION="$(cat lept.txt)" -f alpine/Dockerfile .
     - docker pull ${CI_REGISTRY_IMAGE}:alpine
     - |
       for tag in ${TAGS}; do
