@@ -2,7 +2,6 @@
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/jitesoft/tesseract-ocr.svg)](https://cloud.docker.com/u/jitesoft/repository/docker/jitesoft/tesseract-ocr)
 [![Back project](https://img.shields.io/badge/Open%20Collective-Tip%20the%20devs!-blue.svg)](https://opencollective.com/jitesoft-open-source)
-[![pipeline status](https://gitlab.com/jitesoft/dockerfiles/tesseract/badges/master/pipeline.svg)](https://gitlab.com/jitesoft/dockerfiles/tesseract/commits/master)
 
 [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) - Ubuntu and Alpine linux images.  
 
@@ -12,36 +11,16 @@ Tesseract and Leptonica are both built from source for each platform and distro,
 
 Versions indicates OS version (or OS name in the case of alpine), not Tesseract version. All versions uses Tesseract 4.
 
-### Docker Hub
+Images can be found at:
 
-* `jitesoft/tesseract-ocr`
-    * `next`, `groovy`, `20.10`
-    * `latest`, `20.04`, `focal`, `lts`
-    * `19.10`, `eoan`
-    * `18.04`, `bionic`
-    * `alpine`
+* [Docker hub](https://hub.docker.com/r/jitesoft/tesseract-ocr): `jitesoft/tesseract-ocr`  
+* [GitLab](https://gitlab.com/jitesoft/dockerfiles/tesseract): `registry.gitlab.com/jitesoft/dockerfiles/tesseract`
+* [GitHub](https://github.com/orgs/jitesoft/packages/container/package/tesseract): `ghcr.io/jitesoft/tesseract`
+* [Quay](https://quay.io/jitesoft/tesseract): `quay.io/jitesoft/tesseract`
 
-### GitLab
+## Dockerfile
 
-* `registry.gitlab.com/jitesoft/dockerfiles/tesseract`
-    * `next`, `groovy`, `20.10`
-    * `latest`, `20.04`, `focal`, `lts`
-    * `19.10`, `eoan`
-    * `18.04`, `bionic`
-    * `alpine`
-
-### Quay.io
-
-* `quay.io/jitesoft/tesseract`
-    * `next`, `groovy`, `20.10`
-    * `latest`, `20.04`, `focal`, `lts`
-    * `19.10`, `eoan`
-    * `18.04`, `bionic`
-    * `alpine`
-
-Ubuntu "cosmic" (18.10) have reached the end of life as of July 2019 and is no longer maintained.  
-Ubuntu "disco" (19.04) have reached the end of life as of January 2020 and is no longer maintained.  
-Ubuntu "eoan" (19.10) will reach the end of life on July 2020 and will after that no longer be maintained.  
+Dockerfile can be found at [gitlab](https://gitlab.com/jitesoft/dockerfiles/tesseract) or [github](https://github.com/jitesoft/docker-tesseract-ocr)
 
 ## Training and languages
 
@@ -72,10 +51,6 @@ docker run -v /path/to/image/img.jpg:/tmp/img.jpg jitesoft/tesseract-ocr /tmp/im
 ```
 
 Use high DPI image for best result. Higher DPI does increase the time to run though.
-
----
-
-Image can be found at [gitlab](https://gitlab.com/jitesoft/dockerfiles/tesseract) or [github](https://github.com/jitesoft/docker-tesseract-ocr)
 
 ### Image labels
 

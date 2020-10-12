@@ -112,28 +112,6 @@ build:ubuntu:arm:20.04:
   tags:
     - native-aarch64
 
-build:ubuntu:amd:19.10:
-  extends: .build:ubuntu
-  variables:
-    CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
-    DOCKER_ARCH: "amd64"
-    UBUNTU_VERSION: "19.10"
-    CCACHE_COMPRESS: "true"
-    CCACHE_MAXSIZE: "128M"
-  tags:
-    - native-amd64
-
-build:ubuntu:arm:19.10:
-  extends: .build:ubuntu
-  variables:
-    CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
-    DOCKER_ARCH: "arm64"
-    UBUNTU_VERSION: "19.10"
-    CCACHE_COMPRESS: "true"
-    CCACHE_MAXSIZE: "128M"
-  tags:
-    - native-aarch64
-
 build:ubuntu:amd:20.10:
   extends: .build:ubuntu
   variables:
@@ -243,7 +221,7 @@ build:alpine:arm:
   stage: containerize
   image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
   script:
-    - TAGLIST=$(helper taglist "jitesoft/tesseract-ocr,${CI_REGISTRY_IMAGE}" "${TAGS}")
+    - TAGLIST=$(helper taglist "jitesoft/tesseract-ocr,ghcr.io/jitesoft/tesseract,${CI_REGISTRY_IMAGE}" "${TAGS}")
     - docker buildx build --push ${TAGLIST} --platform "linux/amd64,linux/arm64" --build-arg UBUNTU_VERSION="${UBUNTU_VERSION}" --build-arg TESSERACT_VERSION="$(cat tess.txt)" --build-arg LEPTONICA_VERSION="$(cat lept.txt)" -f ubuntu/Dockerfile .
     - docker pull ${CI_REGISTRY_IMAGE}:${UBUNTU_VERSION}
     - |
@@ -303,15 +281,6 @@ containerize:ubuntu:20.10:
     UBUNTU_VERSION: "20.10"
     TAGS: "20.10,groovy,next"
 
-containerize:ubuntu:19.10:
-  needs:
-    - build:ubuntu:arm:19.10
-    - build:ubuntu:amd:19.10
-  extends: .containerize:ubuntu
-  variables:
-    UBUNTU_VERSION: "19.10"
-    TAGS: "19.10,eoan"
-
 scan:ubuntu:18.04:
   extends: .container_scanning
   variables:
@@ -322,12 +291,6 @@ scan:ubuntu:20.10:
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:20.10"
-    GIT_STRATEGY: none
-
-scan:ubuntu:19.10:
-  extends: .container_scanning
-  variables:
-    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:19.10"
     GIT_STRATEGY: none
 
 scan:ubuntu:20.04:
