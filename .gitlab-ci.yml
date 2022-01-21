@@ -7,27 +7,50 @@ stages:
 include:
   - https://gitlab.com/jitesoft/gitlab-ci-lib/raw/master/Scan/trivy.yml
 
+check:
+  parallel:
+    matrix:
+      - { TESS_BRANCH: 4, GIT_STRATEGY: none }
+      - { TESS_BRANCH: 5, GIT_STRATEGY: none }
+  stage: download
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      when: always
+    - when: never
+  script:
+    - apk add --no-cache jq
+    - touch version${TESS_BRANCH}.txt
+    - VERSION=$(wget -qO- https://api.github.com/repos/tesseract-ocr/tesseract/releases | jq -r ".[].tag_name" | grep -oP "[$TESS_BRANCH][.]\d+[.]\d+" | head -n1)
+    - LEPT_VERSION=$(wget -qO- https://api.github.com/repos/DanBloomberg/leptonica/releases | jq -r ".[0].tag_name")
+    - DONE=$(cat version${TESS_BRANCH}.txt)
+    - |
+      if [ ! -z "${FORCE_BUILD+x}" ] ||  [ "${VERSION}" != "${DONE}" ]; then
+        curl -F token=${CI_JOB_TOKEN} -F ref=master -F "variables[LEPT_VERSION]=$LEPT_VERSION" -F "variables[TESS_BRANCH]=$TESS_BRANCH" -F "variables[VERSION]=${VERSION}" -F "variables[BUILD]=true" https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
+      else
+        curl -F token=${CI_JOB_TOKEN} -F ref=master -F "variables[TESS_BRANCH]=$TESS_BRANCH" -F "variables[VERSION]=${VERSION}" -F "variables[SCAN]=true" https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
+      fi
+
 download:
+  rules:
+    - if: "$BUILD"
+      when: always
+    - when: never
   variables:
     GIT_STRATEGY: none
   stage: download
   image: registry.gitlab.com/jitesoft/dockerfiles/alpine:latest
   before_script:
-    - apk add --no-cache wget grep coreutils
+    - apk add --no-cache wget coreutils
   script:
-    - TESS_VERSION=$(wget -qO- https://github.com/tesseract-ocr/tesseract/releases/latest | grep -oP '(?<=releases\/tag\/)(.*?)(?=\&)' | awk 'NR==1{print $1}')
-    - LEPT_VERSION=$(wget -qO- https://github.com/DanBloomberg/leptonica/releases/latest | grep -oP '(?<=releases\/tag\/)(.*?)(?=\&)' | awk 'NR==1{print $1}')
-    - wget -O tess.tar.gz https://github.com/tesseract-ocr/tesseract/archive/${TESS_VERSION}.tar.gz
+    - wget -O tess.tar.gz https://github.com/tesseract-ocr/tesseract/archive/${VERSION}.tar.gz
     - wget -O lept.tar.gz https://github.com/DanBloomberg/leptonica/releases/download/${LEPT_VERSION}/leptonica-${LEPT_VERSION}.tar.gz
     - wget https://github.com/tesseract-ocr/tessdata/raw/3.04.00/equ.traineddata
     - wget https://github.com/tesseract-ocr/tessdata/raw/3.04.00/osd.traineddata
     - wget -O eng.traineddata https://github.com/tesseract-ocr/tessdata_fast/blob/master/eng.traineddata?raw=true
-    - printf "${TESS_VERSION}" > tess.txt
-    - printf "${LEPT_VERSION}" > lept.txt
   artifacts:
     paths:
-      - tess.txt
-      - lept.txt
       - tess.tar.gz
       - lept.tar.gz
       - osd.traineddata
@@ -35,7 +58,13 @@ download:
       - eng.traineddata
     expire_in: 5 days
 
+#region UBUNTU
+
 .build:ubuntu:
+  rules:
+    - if: "$BUILD"
+      when: on_success
+    - when: never
   stage: build
   image: registry.gitlab.com/jitesoft/dockerfiles/ubuntu:${UBUNTU_VERSION}
   dependencies:
@@ -75,88 +104,106 @@ download:
     - cp eng.traineddata equ.traineddata osd.traineddata /usr/local/share/tessdata
     - chmod -R +x /usr/local/bin
     - $(cd /usr/local && tar -czf ${CI_PROJECT_DIR}/tess-${DOCKER_ARCH}.tar.gz *)
-    - mkdir binaries
-    - mv tess-${DOCKER_ARCH}.tar.gz binaries/
+    - mkdir -p binaries/${UBUNTU_VERSION}
+    - mv tess-${DOCKER_ARCH}.tar.gz binaries/${UBUNTU_VERSION}
     - ccache -s
   cache:
     paths:
       - ccache
-    key: tess.ubuntu.build.ccache-${DOCKER_ARCH}-${UBUNTU_VERSION}
+    key: tess.ubuntu.build.ccache-${DOCKER_ARCH}-${UBUNTU_VERSION}-${TESS_BRANCH}
   artifacts:
     paths:
       - binaries
-      - tess.txt
-      - lept.txt
     when: on_success
     expire_in: 1 day
 
-build:ubuntu:amd:20.04:
+build:ubuntu:amd:
   extends: .build:ubuntu
+  parallel:
+    matrix:
+      - { UBUNTU_VERSION: "18.04" }
+      - { UBUNTU_VERSION: "20.04" }
+      - { UBUNTU_VERSION: "21.04" }
+      - { UBUNTU_VERSION: "21.10" }
   variables:
     CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
     DOCKER_ARCH: "amd64"
-    UBUNTU_VERSION: "20.04"
     CCACHE_COMPRESS: "true"
     CCACHE_MAXSIZE: "128M"
   tags:
     - native-amd64
 
-build:ubuntu:arm:20.04:
+build:ubuntu:arm:
   extends: .build:ubuntu
+  parallel:
+    matrix:
+      - { UBUNTU_VERSION: "18.04" }
+      - { UBUNTU_VERSION: "20.04" }
+      - { UBUNTU_VERSION: "21.04" }
+      - { UBUNTU_VERSION: "21.10" }
   variables:
     CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
     DOCKER_ARCH: "arm64"
-    UBUNTU_VERSION: "20.04"
     CCACHE_COMPRESS: "true"
     CCACHE_MAXSIZE: "128M"
   tags:
     - native-aarch64
 
-build:ubuntu:amd:20.10:
-  extends: .build:ubuntu
-  variables:
-    CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
-    DOCKER_ARCH: "amd64"
-    UBUNTU_VERSION: "20.10"
-    CCACHE_COMPRESS: "true"
-    CCACHE_MAXSIZE: "128M"
-  tags:
-    - native-amd64
 
-build:ubuntu:arm:20.10:
-  extends: .build:ubuntu
-  variables:
-    CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
-    DOCKER_ARCH: "arm64"
-    UBUNTU_VERSION: "20.10"
-    CCACHE_COMPRESS: "true"
-    CCACHE_MAXSIZE: "128M"
-  tags:
-    - native-aarch64
+.containerize:ubuntu:
+  rules:
+    - if: "$BUILD"
+      when: on_success
+    - when: never
+  needs:
+    - build:ubuntu:arm
+    - build:ubuntu:amd
+  stage: containerize
+  image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
+  script:
+    - mkdir bin
+    - mv binaries/${UBUNTU_VERSION}/* bin/
+    - TAGLIST=$(helper taglist "jitesoft/tesseract-ocr,ghcr.io/jitesoft/tesseract,${CI_REGISTRY_IMAGE}" "${TAGS}")
+    - docker buildx build --push ${TAGLIST} --platform "linux/amd64,linux/arm64" --build-arg BUILD_TIME="$(date -Iseconds)" --build-arg UBUNTU_VERSION="${UBUNTU_VERSION}" --build-arg TESSERACT_VERSION="${TESS_VERSION}" --build-arg LEPTONICA_VERSION="${LEPT_VERSION}" -f ubuntu/Dockerfile .
+  tags: [protected, jitesoft, buildx]
 
-build:ubuntu:amd:18.04:
-  extends: .build:ubuntu
-  variables:
-    CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
-    DOCKER_ARCH: "amd64"
-    UBUNTU_VERSION: "18.04"
-    CCACHE_COMPRESS: "true"
-    CCACHE_MAXSIZE: "128M"
-  tags:
-    - native-amd64
 
-build:ubuntu:arm:18.04:
-  extends: .build:ubuntu
-  variables:
-    CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
-    DOCKER_ARCH: "arm64"
-    UBUNTU_VERSION: "18.04"
-    CCACHE_COMPRESS: "true"
-    CCACHE_MAXSIZE: "128M"
-  tags:
-    - native-aarch64
+containerize:ubuntu:4:
+  extends: .containerize:ubuntu
+  rules:
+    - if: "$BUILD && $TESS_BRANCH = 4"
+      when: on_success
+    - when: never
+  parallel:
+    matrix:
+      - { UBUNTU_VERSION: "18.04", TAGS: "4-18.04,4-bionic" }
+      - { UBUNTU_VERSION: "20.04", TAGS: "4-20.04,4-focal,4-lts,4-latest,4,4-${VERSION}" }
+      - { UBUNTU_VERSION: "21.04", TAGS: "4-21.04,4-hirsute" }
+      - { UBUNTU_VERSION: "21.10", TAGS: "4-21.10,4-impish" }
+
+containerize:ubuntu:5:
+  extends: .containerize:ubuntu
+  rules:
+    - if: "$BUILD && $TESS_BRANCH = 5"
+      when: on_success
+    - when: never
+  parallel:
+    matrix:
+      - { UBUNTU_VERSION: "18.04", TAGS: "18.04,bionic" }
+      - { UBUNTU_VERSION: "20.04", TAGS: "20.04,focal,lts,latest,5,${VERSION}" }
+      - { UBUNTU_VERSION: "21.04", TAGS: "21.04,hirsute" }
+      - { UBUNTU_VERSION: "21.10", TAGS: "21.10,impish" }
+
+
+
+#endregion
+
 
 .build:alpine:
+  rules:
+    - if: "$BUILD"
+      when: on_success
+    - when: never
   stage: build
   dependencies:
     - download
@@ -170,7 +217,10 @@ build:ubuntu:arm:18.04:
     - tar -xhzf lept.tar.gz -C src/lept --strip-components=1
     - tar -xhzf tess.tar.gz -C src/tess --strip-components=1
     - apk add --no-cache pango-dev icu-dev cairo-dev libpng-dev libjpeg-turbo-dev tiff-dev libwebp-dev giflib-dev openjpeg-dev patch
-    - patch src/tess/src/ccutil/ocrclass.h < alpine/tess.patch
+    - | 
+      if [ "$TESS_BRANCH" = "4" ]; then
+        patch src/tess/src/ccutil/ocrclass.h < alpine/tess.patch
+      fi
     - cd ${CI_PROJECT_DIR}/src/lept
     - ./configure
     - make
@@ -192,12 +242,10 @@ build:ubuntu:arm:18.04:
   cache:
     paths:
       - ccache
-    key: tess.build.ccache-${DOCKER_ARCH}
+    key: tess.build.ccache-${DOCKER_ARCH}-${TESS_BRANCH}
   artifacts:
     paths:
       - binaries
-      - tess.txt
-      - lept.txt
     when: on_success
     expire_in: 1 day
 
@@ -217,90 +265,80 @@ build:alpine:arm:
   tags:
     - native-aarch64
 
-.containerize:ubuntu:
-  stage: containerize
-  image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
-  script:
-    - TAGLIST=$(helper taglist "jitesoft/tesseract-ocr,ghcr.io/jitesoft/tesseract,${CI_REGISTRY_IMAGE}" "${TAGS}")
-    - docker buildx build --push ${TAGLIST} --platform "linux/amd64,linux/arm64" --build-arg UBUNTU_VERSION="${UBUNTU_VERSION}" --build-arg TESSERACT_VERSION="$(cat tess.txt)" --build-arg LEPTONICA_VERSION="$(cat lept.txt)" -f ubuntu/Dockerfile .
-    - docker pull ${CI_REGISTRY_IMAGE}:${UBUNTU_VERSION}
-    - |
-      for tag in $( echo $TAGS | tr "," " "); do
-        docker tag ${CI_REGISTRY_IMAGE}:${UBUNTU_VERSION} quay.io/jitesoft/tesseract:${tag}
-        docker push quay.io/jitesoft/tesseract:${tag}
-      done
-  tags: [protected, jitesoft, buildx]
-
-.containerize:alpine:
-  variables:
-    TAGS: "alpine"
+containerize:alpine:
+  rules:
+    - if: "$BUILD"
+      when: on_success
+    - when: never
   needs:
     - build:alpine:arm
     - build:alpine:amd
+  variables:
+    GL_TAGS: "${VERSION},${TESS_BRANCH}"
+    TAGS: "${VERSION}-alpine,${TESS_BRANCH}-alpine"
   stage: containerize
   image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
-  script:
-    - docker buildx build --push -t ghcr.io/jitesoft/tesseract:alpine -t jitesoft/tesseract-ocr:alpine -t ${CI_REGISTRY_IMAGE}:alpine --platform linux/amd64,linux/arm64 --build-arg TESSERACT_VERSION="$(cat tess.txt)" --build-arg LEPTONICA_VERSION="$(cat lept.txt)" -f alpine/Dockerfile .
-    - docker pull ${CI_REGISTRY_IMAGE}:alpine
+  before_script:
     - |
-      for tag in ${TAGS}; do
-        docker tag ${CI_REGISTRY_IMAGE}:alpine quay.io/jitesoft/tesseract:${tag}
-        docker push quay.io/jitesoft/tesseract:${tag}
-      done
+      if [ "${TESS_BRANCH}" = "5" ]; then
+        GL_TAGS="${GL_TAGS},latest"
+        TAGS="${TAGS},latest-alpine,alpine"
+      fi
+  script:
+    - TAGLIST=$(helper taglist "jitesoft/tesseract-ocr,ghcr.io/jitesoft/tesseract,${CI_REGISTRY_IMAGE}/alpine" "${TAGS}")
+    - docker buildx build --push ${TAGLIST} --platform linux/amd64,linux/arm64 --build-arg BUILD_TIME="$(date -Iseconds)" --build-arg TESSERACT_VERSION="${TESS_VERSION}" --build-arg LEPTONICA_VERSION="${LEPT_VERSION}" -f alpine/Dockerfile .
   tags: [protected, jitesoft, buildx]
 
-containerize:alpine:latest:
-  extends: .containerize:alpine
-  variables:
-    TAGS: "alpine"
-
-containerize:ubuntu:20.04:
-  needs:
-    - build:ubuntu:arm:20.04
-    - build:ubuntu:amd:20.04
-  extends: .containerize:ubuntu
-  variables:
-    UBUNTU_VERSION: "20.04"
-    TAGS: "20.04,focal,lts,latest"
-
-containerize:ubuntu:18.04:
-  needs:
-    - build:ubuntu:arm:18.04
-    - build:ubuntu:amd:18.04
-  extends: .containerize:ubuntu
-  variables:
-    UBUNTU_VERSION: "18.04"
-    TAGS: "18.04,bionic"
-
-containerize:ubuntu:20.10:
-  needs:
-    - build:ubuntu:arm:20.10
-    - build:ubuntu:amd:20.10
-  extends: .containerize:ubuntu
-  variables:
-    UBUNTU_VERSION: "20.10"
-    TAGS: "20.10,groovy,next"
-
-scan:ubuntu:18.04:
+scan:ubuntu:4:
   extends: .container_scanning
-  variables:
-    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:18.04"
-    GIT_STRATEGY: none
+  rules:
+    - if: "$SCAN && $TESS_BRANCH = 4"
+      when: always
+    - if: "$BUILD && $TESS_BRANCH = 4"
+      when: on_success
+    - when: never
+  parallel:
+    matrix:
+      - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:4-18.04", GIT_STRATEGY: "none" }
+      - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:4-20.04", GIT_STRATEGY: "none" }
+      - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:4-21.04", GIT_STRATEGY: "none" }
+      - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:4-21.10", GIT_STRATEGY: "none" }
 
-scan:ubuntu:20.10:
+scan:ubuntu:5:
   extends: .container_scanning
-  variables:
-    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:20.10"
-    GIT_STRATEGY: none
+  rules:
+    - if: "$SCAN && $TESS_BRANCH = 5"
+      when: always
+    - if: "$BUILD && $TESS_BRANCH = 5"
+      when: on_success
+    - when: never
+  parallel:
+    matrix:
+      - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:18.04", GIT_STRATEGY: "none" }
+      - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:20.04", GIT_STRATEGY: "none" }
+      - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:21.04", GIT_STRATEGY: "none" }
+      - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:21.10", GIT_STRATEGY: "none" }
 
-scan:ubuntu:20.04:
+scan:alpine:4:
   extends: .container_scanning
+  rules:
+    - if: "$SCAN && $TESS_BRANCH = 4"
+      when: always
+    - if: "$BUILD && $TESS_BRANCH = 4"
+      when: on_success
+    - when: never
   variables:
-    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:20.04"
     GIT_STRATEGY: none
+    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}/alpine:4"
 
-scan:alpine:
+scan:alpine:5:
   extends: .container_scanning
+  rules:
+    - if: "$SCAN && $TESS_BRANCH = 5"
+      when: always
+    - if: "$BUILD && $TESS_BRANCH = 5"
+      when: on_success
+    - when: never
   variables:
-    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:alpine"
     GIT_STRATEGY: none
+    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}/alpine:5"
