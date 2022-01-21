@@ -8,14 +8,14 @@ include:
   - https://gitlab.com/jitesoft/gitlab-ci-lib/raw/master/Scan/trivy.yml
 
 check:
- # parallel:
- #   matrix:
- #     - { TESS_BRANCH: 4, GIT_STRATEGY: none }
- #     - { TESS_BRANCH: 5, GIT_STRATEGY: none }
-  stage: download
+  #parallel:
+  #  matrix:
+  #    - { TESS_BRANCH: 4, GIT_STRATEGY: none }
+  #    - { TESS_BRANCH: 5, GIT_STRATEGY: none }
   variables:
     TESS_BRANCH: "4"
     GIT_STRATEGY: none
+  stage: download
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: always
@@ -152,10 +152,6 @@ build:ubuntu:arm:
 
 
 .containerize:ubuntu:
-  rules:
-    - if: "$BUILD"
-      when: on_success
-    - when: never
   needs:
     - build:ubuntu:arm
     - build:ubuntu:amd
@@ -172,7 +168,7 @@ build:ubuntu:arm:
 containerize:ubuntu:4:
   extends: .containerize:ubuntu
   rules:
-    - if: "$BUILD && $TESS_BRANCH = 4"
+    - if: '$BUILD && $TESS_BRANCH == "4"'
       when: on_success
     - when: never
   parallel:
@@ -184,7 +180,7 @@ containerize:ubuntu:4:
 containerize:ubuntu:5:
   extends: .containerize:ubuntu
   rules:
-    - if: "$BUILD && $TESS_BRANCH = 5"
+    - if: '$BUILD && $TESS_BRANCH == "5"'
       when: on_success
     - when: never
   parallel:
@@ -193,10 +189,7 @@ containerize:ubuntu:5:
       - { UBUNTU_VERSION: "20.04", TAGS: "20.04,focal,lts,latest,5,${VERSION}" }
       - { UBUNTU_VERSION: "21.10", TAGS: "21.10,impish" }
 
-
-
 #endregion
-
 
 .build:alpine:
   rules:
@@ -291,9 +284,9 @@ containerize:alpine:
 scan:ubuntu:4:
   extends: .container_scanning
   rules:
-    - if: "$SCAN && $TESS_BRANCH = 4"
+    - if: '$SCAN && $TESS_BRANCH == "4"'
       when: always
-    - if: "$BUILD && $TESS_BRANCH = 4"
+    - if: '$BUILD && $TESS_BRANCH == "4"'
       when: on_success
     - when: never
   parallel:
@@ -306,9 +299,9 @@ scan:ubuntu:4:
 scan:ubuntu:5:
   extends: .container_scanning
   rules:
-    - if: "$SCAN && $TESS_BRANCH = 5"
+    - if: '$SCAN && $TESS_BRANCH == "5"'
       when: always
-    - if: "$BUILD && $TESS_BRANCH = 5"
+    - if: '$BUILD && $TESS_BRANCH == "5"'
       when: on_success
     - when: never
   parallel:
@@ -321,9 +314,9 @@ scan:ubuntu:5:
 scan:alpine:4:
   extends: .container_scanning
   rules:
-    - if: "$SCAN && $TESS_BRANCH = 4"
+    - if: '$SCAN && $TESS_BRANCH == "4"'
       when: always
-    - if: "$BUILD && $TESS_BRANCH = 4"
+    - if: '$BUILD && $TESS_BRANCH == "4"'
       when: on_success
     - when: never
   variables:
@@ -333,9 +326,9 @@ scan:alpine:4:
 scan:alpine:5:
   extends: .container_scanning
   rules:
-    - if: "$SCAN && $TESS_BRANCH = 5"
+    - if: '$SCAN && $TESS_BRANCH == "5"'
       when: always
-    - if: "$BUILD && $TESS_BRANCH = 5"
+    - if: '$BUILD && $TESS_BRANCH == "5"'
       when: on_success
     - when: never
   variables:
