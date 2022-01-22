@@ -64,23 +64,21 @@ Tesseract is released under the [Apache License v2](https://github.com/tesseract
 Notice: The tesseract source have been modified with a patch (`alpine/tess.patch`) to allow for compilation in alpine linux.
 
 
-## Sponsors
+### Sponsors
 
-Sponsoring is vital for the further development and maintaining of open source projects.  
-Questions and sponsoring queries can be made via <a href="mailto:sponsor@jitesoft.com">email</a>.  
+Jitesoft images are built via GitLab CI on runners hosted by the following wonderful organisations:
+
+[![Fosshost Logo](https://raw.githubusercontent.com/jitesoft/misc/master/sponsors/fosshostx128.png)](https://fosshost.org)
+[![Aarch64 logo](https://raw.githubusercontent.com/jitesoft/misc/master/sponsors/aarch64x128.png)](https://aarch64.com)
+
+_The companies above are not affiliated with Jitesoft or any Jitesoft Projects directly._
+
+---
+
+Sponsoring is vital for the further development and maintaining of open source.  
+Questions and sponsoring queries can be made by <a href="mailto:sponsor@jitesoft.com">email</a>.  
 If you wish to sponsor our projects, reach out to the email above or visit any of the following sites:
 
 [Open Collective](https://opencollective.com/jitesoft-open-source)  
 [GitHub Sponsors](https://github.com/sponsors/jitesoft)  
 [Patreon](https://www.patreon.com/jitesoft)
-
-Jitesoft images are built via GitLab CI on runners hosted by the following wonderful organisations:
-
-<a href="https://www.linaro.org/">
-  <img src="https://raw.githubusercontent.com/jitesoft/misc/master/sponsors/linaro.png" width="256" alt="Linaro logo" />
-</a>
-<a href="https://fosshost.org/">
-  <img src="https://raw.githubusercontent.com/jitesoft/misc/master/sponsors/fosshost.png" width="256" alt="Fosshost logo" />
-</a>
-
-_The companies above are not affiliated with Jitesoft or any Jitesoft Projects directly._
