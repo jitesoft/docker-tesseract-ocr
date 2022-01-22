@@ -8,13 +8,10 @@ include:
   - https://gitlab.com/jitesoft/gitlab-ci-lib/raw/master/Scan/trivy.yml
 
 check:
-  #parallel:
-  #  matrix:
-  #    - { TESS_BRANCH: 4, GIT_STRATEGY: none }
-  #    - { TESS_BRANCH: 5, GIT_STRATEGY: none }
-  variables:
-    TESS_BRANCH: "4"
-    GIT_STRATEGY: none
+  parallel:
+    matrix:
+      - { TESS_BRANCH: 4, GIT_STRATEGY: none }
+      - { TESS_BRANCH: 5, GIT_STRATEGY: none }
   stage: download
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
