@@ -5,11 +5,15 @@
 
 [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) - Ubuntu and Alpine linux images.  
 
-Tesseract and Leptonica are both built from source for each platform and distro, supported platforms are amd64 (x86_64) arm64 (aarch64).
+Tesseract and Leptonica are both built from source for each platform and distro, 
+supported platforms are amd64 (x86_64) arm64 (aarch64).
 
 ## Tags
 
-Versions indicates OS version (or OS name in the case of alpine), not Tesseract version. All versions uses Tesseract 4.
+Versions indicates OS version (or the name in case of alpine), the images with `4-` prefix uses
+tesseract version 4 while images without the prefix uses version 5.  
+
+All versions uses the same training data.
 
 Images can be found at:
 
