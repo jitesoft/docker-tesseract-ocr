@@ -147,7 +147,6 @@ build:ubuntu:arm:
   tags:
     - native-aarch64
 
-
 .containerize:ubuntu:
   needs:
     - build:ubuntu:arm
@@ -160,7 +159,6 @@ build:ubuntu:arm:
     - TAGLIST=$(helper taglist "jitesoft/tesseract-ocr,ghcr.io/jitesoft/tesseract,${CI_REGISTRY_IMAGE}" "${TAGS}")
     - docker buildx build --push ${TAGLIST} --platform "linux/amd64,linux/arm64" --build-arg BUILD_TIME="$(date -Iseconds)" --build-arg UBUNTU_VERSION="${UBUNTU_VERSION}" --build-arg TESSERACT_VERSION="${TESS_VERSION}" --build-arg LEPTONICA_VERSION="${LEPT_VERSION}" -f ubuntu/Dockerfile .
   tags: [protected, jitesoft, buildx]
-
 
 containerize:ubuntu:4:
   extends: .containerize:ubuntu
@@ -290,7 +288,6 @@ scan:ubuntu:4:
     matrix:
       - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:4-18.04", GIT_STRATEGY: "none" }
       - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:4-20.04", GIT_STRATEGY: "none" }
-      - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:4-21.04", GIT_STRATEGY: "none" }
       - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:4-21.10", GIT_STRATEGY: "none" }
 
 scan:ubuntu:5:
@@ -305,7 +302,6 @@ scan:ubuntu:5:
     matrix:
       - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:18.04", GIT_STRATEGY: "none" }
       - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:20.04", GIT_STRATEGY: "none" }
-      - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:21.04", GIT_STRATEGY: "none" }
       - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:21.10", GIT_STRATEGY: "none" }
 
 scan:alpine:4:
