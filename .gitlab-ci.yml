@@ -10,8 +10,8 @@ include:
 check:
   parallel:
     matrix:
-      - { TESS_BRANCH: 4, GIT_STRATEGY: none }
-      - { TESS_BRANCH: 5, GIT_STRATEGY: none }
+      - { TESS_BRANCH: "4", GIT_STRATEGY: none }
+      - { TESS_BRANCH: "5", GIT_STRATEGY: none }
   stage: download
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
