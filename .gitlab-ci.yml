@@ -48,7 +48,7 @@ download:
     - wget -O lept.tar.gz https://github.com/DanBloomberg/leptonica/releases/download/${LEPT_VERSION}/leptonica-${LEPT_VERSION}.tar.gz
     - wget https://github.com/tesseract-ocr/tessdata/raw/3.04.00/equ.traineddata
     - wget https://github.com/tesseract-ocr/tessdata/raw/3.04.00/osd.traineddata
-    - wget -O eng.traineddata https://github.com/tesseract-ocr/tessdata_fast/blob/master/eng.traineddata?raw=true
+    - wget -O eng.traineddata https://github.com/tesseract-ocr/tessdata_fast/raw/main/eng.traineddata
   artifacts:
     paths:
       - tess.tar.gz

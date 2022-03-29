@@ -19,7 +19,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 echo "Trying to install tesseract trained data for language with code: ${LANGUAGE_CODE}"
-URI="https://github.com/tesseract-ocr/tessdata${TYPE}/blob/master/${LANGUAGE_CODE}.traineddata?raw=true"
+URI="https://github.com/tesseract-ocr/tessdata${TYPE}/raw/main/${LANGUAGE_CODE}.traineddata"
 apk add --no-cache wget
 
 if wget --spider "${URI}" >/dev/null 2>&1; then
