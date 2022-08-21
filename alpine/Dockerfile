@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:experimental
-FROM registry.gitlab.com/jitesoft/dockerfiles/alpine:3.14
+FROM registry.gitlab.com/jitesoft/dockerfiles/alpine:3.16
 ARG TESSERACT_VERSION
 ARG LEPTONICA_VERSION
 ARG BUILD_TIME
