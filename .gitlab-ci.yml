@@ -123,7 +123,7 @@ build:ubuntu:amd:
     matrix:
       - { UBUNTU_VERSION: "18.04" }
       - { UBUNTU_VERSION: "20.04" }
-      - { UBUNTU_VERSION: "21.10" }
+      - { UBUNTU_VERSION: "22.04" }
   variables:
     CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
     DOCKER_ARCH: "amd64"
@@ -138,7 +138,7 @@ build:ubuntu:arm:
     matrix:
       - { UBUNTU_VERSION: "18.04" }
       - { UBUNTU_VERSION: "20.04" }
-      - { UBUNTU_VERSION: "21.10" }
+      - { UBUNTU_VERSION: "22.04" }
   variables:
     CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
     DOCKER_ARCH: "arm64"
@@ -169,8 +169,8 @@ containerize:ubuntu:4:
   parallel:
     matrix:
       - { UBUNTU_VERSION: "18.04", TAGS: "4-18.04,4-bionic" }
-      - { UBUNTU_VERSION: "20.04", TAGS: "4-20.04,4-focal,4-lts,4-latest,4,4-${VERSION}" }
-      - { UBUNTU_VERSION: "21.10", TAGS: "4-21.10,4-impish" }
+      - { UBUNTU_VERSION: "20.04", TAGS: "4-20.04,4-focal" }
+      - { UBUNTU_VERSION: "22.04", TAGS: "4-22.04,4-jammy,4-lts,4-latest,4,4-${VERSION}" }
 
 containerize:ubuntu:5:
   extends: .containerize:ubuntu
@@ -181,8 +181,8 @@ containerize:ubuntu:5:
   parallel:
     matrix:
       - { UBUNTU_VERSION: "18.04", TAGS: "18.04,bionic" }
-      - { UBUNTU_VERSION: "20.04", TAGS: "20.04,focal,lts,latest,5,${VERSION}" }
-      - { UBUNTU_VERSION: "21.10", TAGS: "21.10,impish" }
+      - { UBUNTU_VERSION: "20.04", TAGS: "20.04,focal" }
+      - { UBUNTU_VERSION: "22.04", TAGS: "22.04,jammy,lts,latest,5,${VERSION}" }
 
 #endregion
 
@@ -288,7 +288,7 @@ scan:ubuntu:4:
     matrix:
       - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:4-18.04", GIT_STRATEGY: "none" }
       - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:4-20.04", GIT_STRATEGY: "none" }
-      - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:4-21.10", GIT_STRATEGY: "none" }
+      - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:4-22.04", GIT_STRATEGY: "none" }
 
 scan:ubuntu:5:
   extends: .container_scanning
@@ -302,7 +302,7 @@ scan:ubuntu:5:
     matrix:
       - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:18.04", GIT_STRATEGY: "none" }
       - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:20.04", GIT_STRATEGY: "none" }
-      - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:21.10", GIT_STRATEGY: "none" }
+      - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:22.04", GIT_STRATEGY: "none" }
 
 scan:alpine:4:
   extends: .container_scanning
