@@ -32,6 +32,7 @@ ENV TESSDATA_PREFIX="/usr/local/share/tessdata"
 
 RUN --mount=type=bind,source=./binaries,target=/tmp/tess \
     apk add --no-cache --virtual .extract tar \
+ && addgroup -g 472 -S tesseract 2>&1 \
  && adduser -u 472 -D -S -G tesseract tesseract \
  && tar -xzhf /tmp/tess/tess-${TARGETARCH}.tar.gz -C /usr/local \
  && apk del .extract \
