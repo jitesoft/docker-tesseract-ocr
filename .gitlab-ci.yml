@@ -156,7 +156,7 @@ build:ubuntu:arm:
   script:
     - mkdir bin
     - mv binaries/${UBUNTU_VERSION}/* bin/
-    - TAGLIST=$(helper taglist "jitesoft/tesseract-ocr,ghcr.io/jitesoft/tesseract,${CI_REGISTRY_IMAGE}" "${TAGS}")
+    - TAGLIST=$(helper taglist "jitesoft/tesseract-ocr,ghcr.io/jitesoft/tesseract,${CI_REGISTRY_IMAGE},quay.io/jitesoft/tesseract" "${TAGS}")
     - docker buildx build --push ${TAGLIST} --platform "linux/amd64,linux/arm64" --build-arg BUILD_TIME="$(date -Iseconds)" --build-arg UBUNTU_VERSION="${UBUNTU_VERSION}" --build-arg TESSERACT_VERSION="${TESS_VERSION}" --build-arg LEPTONICA_VERSION="${LEPT_VERSION}" -f ubuntu/Dockerfile .
   tags: [protected, jitesoft, buildx]
 
@@ -272,8 +272,9 @@ containerize:alpine:
         TAGS="${TAGS},latest-alpine,alpine"
       fi
   script:
-    - TAGLIST=$(helper taglist "jitesoft/tesseract-ocr,ghcr.io/jitesoft/tesseract,${CI_REGISTRY_IMAGE}/alpine" "${TAGS}")
-    - docker buildx build --push ${TAGLIST} --platform linux/amd64,linux/arm64 --build-arg BUILD_TIME="$(date -Iseconds)" --build-arg TESSERACT_VERSION="${TESS_VERSION}" --build-arg LEPTONICA_VERSION="${LEPT_VERSION}" -f alpine/Dockerfile .
+    - TAGLIST=$(helper taglist "jitesoft/tesseract-ocr,ghcr.io/jitesoft/tesseract,quay.io/jitesoft/tesseract" "${TAGS}")
+    - GL_TAGLIST=$(helper taglist "${CI_REGISTRY_IMAGE}/alpine", "${GL_TAGS}")
+    - docker buildx build --push ${TAGLIST} ${GL_TAGLIST} --platform linux/amd64,linux/arm64 --build-arg BUILD_TIME="$(date -Iseconds)" --build-arg TESSERACT_VERSION="${TESS_VERSION}" --build-arg LEPTONICA_VERSION="${LEPT_VERSION}" -f alpine/Dockerfile .
   tags: [protected, jitesoft, buildx]
 
 scan:ubuntu:4:
