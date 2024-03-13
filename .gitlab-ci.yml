@@ -1,11 +1,25 @@
 stages:
+  - readme
+  - pre
   - download
   - build
   - containerize
   - scan
 
 include:
-  - https://gitlab.com/jitesoft/gitlab-ci-lib/raw/master/Scan/trivy.yml
+  - file: /Scan/trivy.yml
+    project: jitesoft/gitlab-ci-lib
+  - file: /OCI/push-readme.yml
+    project: jitesoft/gitlab-ci-lib
+
+update-readme:
+  stage: pre
+  extends: .readme-check.v2
+  variables:
+    PUSHRM_FILE: "$CI_PROJECT_DIR/README.md"
+    GIT_DEPTH: "3"
+    REGISTRIES: "quay.io/jitesoft/tesseract,docker.io/jitesoft/tesseract-ocr"
+  tags: [ protected ]
 
 check:
   parallel:
