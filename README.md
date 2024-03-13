@@ -1,6 +1,6 @@
 # Tesseract OCR.
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/jitesoft/tesseract-ocr.svg)](https://cloud.docker.com/u/jitesoft/repository/docker/jitesoft/tesseract-ocr)
+[![Docker Pulls](https://img.shields.io/docker/pulls/jitesoft/tesseract-ocr.svg)](https://hub.docker.com/r/jitesoft/tesseract-ocr)
 [![Back project](https://img.shields.io/badge/Open%20Collective-Tip%20the%20devs!-blue.svg)](https://opencollective.com/jitesoft-open-source)
 
 [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) - Ubuntu and Alpine linux images.  
@@ -10,10 +10,10 @@ supported platforms are amd64 (x86_64) arm64 (aarch64).
 
 ## Tags
 
-Versions indicates OS version (or the name in case of alpine), the images with `4-` prefix uses
+Versions indicate OS version (or the name in case of alpine), the images with `4-` prefix uses
 tesseract version 4 while images without the prefix uses version 5.  
 
-All versions uses the same training data.
+All versions use the same training data.
 
 Images can be found at:
 
@@ -24,7 +24,7 @@ Images can be found at:
 
 ## Dockerfile
 
-Dockerfile can be found at [gitlab](https://gitlab.com/jitesoft/dockerfiles/tesseract) or [github](https://github.com/jitesoft/docker-tesseract-ocr)
+Dockerfile can be found at [GitLab](https://gitlab.com/jitesoft/dockerfiles/tesseract) or [GitHub](https://github.com/jitesoft/docker-tesseract-ocr)
 
 ## Training and languages
 
@@ -72,8 +72,9 @@ Notice: The tesseract source have been modified with a patch (`alpine/tess.patch
 
 Jitesoft images are built via GitLab CI on runners hosted by the following wonderful organisations:
 
-[![Fosshost Logo](https://raw.githubusercontent.com/jitesoft/misc/master/sponsors/fosshostx128.png)](https://fosshost.org)
-[![Aarch64 logo](https://raw.githubusercontent.com/jitesoft/misc/master/sponsors/aarch64x128.png)](https://aarch64.com)
+<a href="https://osuosl.org/" target="_blank" title="Oregon State University - Open Source Lab">
+    <img src="https://jitesoft.com/images/oslx128.webp" alt="Oregon State University - Open Source Lab">
+</a>
 
 _The companies above are not affiliated with Jitesoft or any Jitesoft Projects directly._
 
