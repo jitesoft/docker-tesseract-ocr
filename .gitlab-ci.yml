@@ -102,6 +102,7 @@ download:
     - tar -xhzf lept.tar.gz -C src/lept --strip-components=1
     - tar -xhzf tess.tar.gz -C src/tess --strip-components=1
     - cd ${CI_PROJECT_DIR}/src/lept
+    - ./autogen.sh
     - ./configure ${EXTRA_CONFIG_ARGS}
     - make
     - make install
@@ -222,6 +223,7 @@ containerize:ubuntu:5:
         patch src/tess/src/ccutil/ocrclass.h < alpine/tess.patch
       fi
     - cd ${CI_PROJECT_DIR}/src/lept
+    - ./autogen.sh
     - ./configure
     - make
     - make install
