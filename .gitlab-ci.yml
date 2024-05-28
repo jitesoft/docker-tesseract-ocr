@@ -35,7 +35,7 @@ check:
   script:
     - apk add --no-cache jq
     - touch version${TESS_BRANCH}.txt
-    - VERSION=$(wget -qO- https://api.github.com/repos/tesseract-ocr/tesseract/releases | jq -r ".[].tag_name" | grep -oP "[$TESS_BRANCH][.]\d+[.]\d+" | sort -V -f | tail -n1)
+    - VERSION=$(wget -qO- https://api.github.com/repos/tesseract-ocr/tesseract/releases | jq -r ".[].tag_name" | grep -oP "[$TESS_BRANCH][.]\d+[.]\d+$" | sort -V -f | tail -n1)
     - LEPT_VERSION=$(wget -qO- https://api.github.com/repos/DanBloomberg/leptonica/releases | jq -r ".[0].tag_name")
     - DONE=$(cat version${TESS_BRANCH}.txt)
     - |
