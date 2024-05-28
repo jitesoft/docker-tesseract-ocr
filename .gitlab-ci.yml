@@ -57,8 +57,8 @@ download:
   before_script:
     - apk add --no-cache wget coreutils
   script:
-    - wget -O tess.tar.gz https://github.com/tesseract-ocr/tesseract/archive/${VERSION}.tar.gz
-    - wget -O lept.tar.gz https://github.com/DanBloomberg/leptonica/releases/download/${LEPT_VERSION}/leptonica-${LEPT_VERSION}.tar.gz
+    - wget -O tess.tar.gz https://github.com/tesseract-ocr/tesseract/archive/refs/tags/${VERSION}.tar.gz
+    - wget -O lept.tar.gz https://github.com/DanBloomberg/leptonica/archive/refs/tags/${LEPT_VERSION}.tar.gz
     - wget https://github.com/tesseract-ocr/tessdata/raw/3.04.00/equ.traineddata
     - wget https://github.com/tesseract-ocr/tessdata/raw/3.04.00/osd.traineddata
     - wget -O eng.traineddata https://github.com/tesseract-ocr/tessdata_fast/raw/main/eng.traineddata
