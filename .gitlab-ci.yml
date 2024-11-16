@@ -208,7 +208,7 @@ containerize:ubuntu:5:
   stage: build
   dependencies:
     - download
-  image: registry.gitlab.com/jitesoft/dockerfiles/misc/buildbase
+  image: registry.gitlab.com/jitesoft/dockerfiles/misc/buildbase/3.20:latest
   before_script:
     - if [ ! -d "ccache" ]; then mkdir ccache; fi
     - export PATH="/usr/lib/ccache/bin:$PATH"
