@@ -289,7 +289,7 @@ containerize:alpine:
   script:
     - TAGLIST=$(helper taglist "jitesoft/tesseract-ocr,ghcr.io/jitesoft/tesseract,quay.io/jitesoft/tesseract" "${TAGS}")
     - GL_TAGLIST=$(helper taglist "${CI_REGISTRY_IMAGE}/alpine", "${GL_TAGS}")
-    - docker buildx build --push ${TAGLIST} ${GL_TAGLIST} --platform linux/amd64,linux/arm64 --build-arg BUILD_TIME="$(date -Iseconds)" --build-arg TESSERACT_VERSION="${TESS_VERSION}" --build-arg LEPTONICA_VERSION="${LEPT_VERSION}" -f alpine/Dockerfile .
+    - docker buildx build --sbom=true --provenance=true --push ${TAGLIST} ${GL_TAGLIST} --platform linux/amd64,linux/arm64 --build-arg BUILD_TIME="$(date -Iseconds)" --build-arg TESSERACT_VERSION="${TESS_VERSION}" --build-arg LEPTONICA_VERSION="${LEPT_VERSION}" -f alpine/Dockerfile .
   tags: [protected, jitesoft, buildx]
 
 scan:ubuntu:4:
