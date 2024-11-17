@@ -173,18 +173,6 @@ build:ubuntu:arm:
     - docker buildx build --sbom=true --provenance=true --push ${TAGLIST} --platform "linux/amd64,linux/arm64" --build-arg BUILD_TIME="$(date -Iseconds)" --build-arg UBUNTU_VERSION="${UBUNTU_VERSION}" --build-arg TESSERACT_VERSION="${TESS_VERSION}" --build-arg LEPTONICA_VERSION="${LEPT_VERSION}" -f ubuntu/Dockerfile .
   tags: [protected, jitesoft, buildx]
 
-containerize:ubuntu:4:
-  extends: .containerize:ubuntu
-  rules:
-    - if: '$BUILD && $TESS_BRANCH == "4"'
-      when: on_success
-    - when: never
-  parallel:
-    matrix:
-      - { UBUNTU_VERSION: "20.04", TAGS: "4-20.04,4-focal" }
-      - { UBUNTU_VERSION: "22.04", TAGS: "4-22.04,4-jammy" }
-      - { UBUNTU_VERSION: "24.04", TAGS: "4-24.04,4-noble,4-lts,4-latest,4,4-${VERSION}" }
-
 containerize:ubuntu:5:
   extends: .containerize:ubuntu
   rules:
@@ -291,20 +279,6 @@ containerize:alpine:
     - docker buildx build --sbom=true --provenance=true --push ${TAGLIST} ${GL_TAGLIST} --platform linux/amd64,linux/arm64 --build-arg BUILD_TIME="$(date -Iseconds)" --build-arg TESSERACT_VERSION="${TESS_VERSION}" --build-arg LEPTONICA_VERSION="${LEPT_VERSION}" -f alpine/Dockerfile .
   tags: [protected, jitesoft, buildx]
 
-scan:ubuntu:4:
-  extends: .container_scanning
-  rules:
-    - if: '$SCAN && $TESS_BRANCH == "4"'
-      when: always
-    - if: '$BUILD && $TESS_BRANCH == "4"'
-      when: on_success
-    - when: never
-  parallel:
-    matrix:
-      - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:4-20.04", GIT_STRATEGY: "none" }
-      - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:4-22.04", GIT_STRATEGY: "none" }
-      - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:4-24.04", GIT_STRATEGY: "none" }
-
 scan:ubuntu:5:
   extends: .container_scanning
   rules:
@@ -313,25 +287,19 @@ scan:ubuntu:5:
     - if: '$BUILD && $TESS_BRANCH == "5"'
       when: on_success
     - when: never
+  needs:
+    - job: containerize:ubuntu:5
+      artifacts: false
   parallel:
     matrix:
       - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:20.04", GIT_STRATEGY: "none" }
       - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:22.04", GIT_STRATEGY: "none" }
       - { SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:24.04", GIT_STRATEGY: "none" }
 
-scan:alpine:4:
-  extends: .container_scanning
-  rules:
-    - if: '$SCAN && $TESS_BRANCH == "4"'
-      when: always
-    - if: '$BUILD && $TESS_BRANCH == "4"'
-      when: on_success
-    - when: never
-  variables:
-    GIT_STRATEGY: none
-    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}/alpine:4"
-
 scan:alpine:5:
+  needs:
+    - job: containerize:alpine
+      artifacts: false
   extends: .container_scanning
   rules:
     - if: '$SCAN && $TESS_BRANCH == "5"'
