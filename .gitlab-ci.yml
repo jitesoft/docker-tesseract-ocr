@@ -89,7 +89,6 @@ download:
     - apt-get install -y locales
     - EXTRA_CONFIG_ARGS=""
     - if [ "${UBUNTU_VERSION}" = "20.04" ]; then EXTRA_CONFIG_ARGS="--disable-dependency-tracking"; fi
-    - if [ "${UBUNTU_VERSION}" = "20.10" ]; then EXTRA_CONFIG_ARGS="--disable-dependency-tracking"; fi
     - locale-gen en_US.UTF-8
     - dpkg-reconfigure --frontend=noninteractive locales
     - apt-get install -y ccache g++ gcc autoconf automake make libtool pkg-config libpng-dev libturbojpeg0-dev libtiff5-dev zlib1g-dev libwebp-dev libopenjp2-7-dev libgif-dev
@@ -171,7 +170,7 @@ build:ubuntu:arm:
     - mkdir bin
     - mv binaries/${UBUNTU_VERSION}/* bin/
     - TAGLIST=$(helper taglist "jitesoft/tesseract-ocr,ghcr.io/jitesoft/tesseract,${CI_REGISTRY_IMAGE},quay.io/jitesoft/tesseract" "${TAGS}")
-    - docker buildx build --push ${TAGLIST} --platform "linux/amd64,linux/arm64" --build-arg BUILD_TIME="$(date -Iseconds)" --build-arg UBUNTU_VERSION="${UBUNTU_VERSION}" --build-arg TESSERACT_VERSION="${TESS_VERSION}" --build-arg LEPTONICA_VERSION="${LEPT_VERSION}" -f ubuntu/Dockerfile .
+    - docker buildx build --sbom=true --provenance=true --push ${TAGLIST} --platform "linux/amd64,linux/arm64" --build-arg BUILD_TIME="$(date -Iseconds)" --build-arg UBUNTU_VERSION="${UBUNTU_VERSION}" --build-arg TESSERACT_VERSION="${TESS_VERSION}" --build-arg LEPTONICA_VERSION="${LEPT_VERSION}" -f ubuntu/Dockerfile .
   tags: [protected, jitesoft, buildx]
 
 containerize:ubuntu:4:
@@ -184,7 +183,7 @@ containerize:ubuntu:4:
     matrix:
       - { UBUNTU_VERSION: "20.04", TAGS: "4-20.04,4-focal" }
       - { UBUNTU_VERSION: "22.04", TAGS: "4-22.04,4-jammy" }
-      - { UBUNTU_VERSION: "22.04", TAGS: "4-24.04,4-noble,4-lts,4-latest,4,4-${VERSION}" }
+      - { UBUNTU_VERSION: "24.04", TAGS: "4-24.04,4-noble,4-lts,4-latest,4,4-${VERSION}" }
 
 containerize:ubuntu:5:
   extends: .containerize:ubuntu
@@ -196,7 +195,7 @@ containerize:ubuntu:5:
     matrix:
       - { UBUNTU_VERSION: "20.04", TAGS: "20.04,focal" }
       - { UBUNTU_VERSION: "22.04", TAGS: "22.04,jammy,lts,latest,5,${VERSION}" }
-      - { UBUNTU_VERSION: "22.04", TAGS: "5-24.04,5-noble,5-lts,5-latest,5,5-${VERSION}" }
+      - { UBUNTU_VERSION: "24.04", TAGS: "5-24.04,5-noble,5-lts,5-latest,5,5-${VERSION}" }
 
 #endregion
 

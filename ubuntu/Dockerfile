@@ -37,8 +37,8 @@ RUN --mount=type=bind,source=./bin,target=/tmp/tess \
  && groupadd -g 472 -r tesseract \
  && useradd -u 472 -r -g tesseract tesseract \
  && apt-get update \
- && if [ "${UBUNTU_VERSION}" = "22.04" ]; then apt-get -y install libgomp1 libgif7 libwebpmux3 libwebp7 libopenjp2-7 libpng16-16 libjpeg9 libtiff5 zlib1g wget; fi \
- && if [ "${UBUNTU_VERSION}" != "22.04" ]; then apt-get -y install libgomp1 libgif7 libwebpmux3 libwebp6 libopenjp2-7 libpng16-16 libjpeg9 libtiff5 zlib1g wget; fi \
+ && if [ "${UBUNTU_VERSION}" != "20.04" ]; then apt-get -y install libgomp1 libgif7 libwebpmux3 libwebp7 libopenjp2-7 libpng16-16 libjpeg9 libtiff5 zlib1g wget; fi \
+ && if [ "${UBUNTU_VERSION}" = "20.04" ]; then apt-get -y install libgomp1 libgif7 libwebpmux3 libwebp6 libopenjp2-7 libpng16-16 libjpeg9 libtiff5 zlib1g wget; fi \
  && chmod -R +x /usr/local/bin \
  && chown -R tesseract:tesseract /usr/local/share \
  && rm -f /usr/local/lib/*.a \
